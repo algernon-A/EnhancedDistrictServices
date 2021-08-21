@@ -64,6 +64,10 @@ namespace EnhancedDistrictServices
             var info = BuildingManager.instance.m_buildings.m_buffer[building].Info;
             if (TransferManagerInfo.IsDistrictServicesBuilding(building))
             {
+                if (info?.GetService() == ItemClass.Service.PublicTransport && info?.GetSubService() == ItemClass.SubService.PublicTransportPost && info?.GetAI() is PostOfficeAI)
+                {
+                    result |= InputType.OUTGOING2;
+                }
                 if ((info?.GetService() == ItemClass.Service.Electricity && info?.GetAI() is PowerPlantAI) ||
                     (info?.GetService() == ItemClass.Service.Water && info?.GetAI() is HeatingPlantAI) ||
                     (info?.GetService() == ItemClass.Service.Monument && info?.gameObject?.name == "ChirpX Launch Control Center"))
@@ -81,7 +85,10 @@ namespace EnhancedDistrictServices
             if (Settings.enableIndustriesControl && TransferManagerInfo.IsSupplyChainBuilding(building))
             {
                 result |= InputType.SUPPLY_CHAIN;
-
+                if (info?.GetService() == ItemClass.Service.PublicTransport && info?.GetSubService() == ItemClass.SubService.PublicTransportPost && info?.GetAI() is PostOfficeAI)
+                {
+                    result |= InputType.INCOMING2;
+                }
                 if (!(info?.GetAI() is ExtractingFacilityAI || info?.GetAI() is FishFarmAI || info?.GetAI() is FishingHarborAI))
                 {
                     result |= InputType.INCOMING;
@@ -222,7 +229,7 @@ namespace EnhancedDistrictServices
                 var vehiclePrefabAI = instance.m_vehicles.m_buffer[(int)vehicleID].Info.GetAI();
                 var vehicleMaterial = (TransferManager.TransferReason)instance.m_vehicles.m_buffer[(int)vehicleID].m_transferType;
 
-                if (vehiclePrefabAI.GetType() == typeof(CargoPlaneAI) || vehiclePrefabAI.GetType() == typeof(CargoShipAI) || vehiclePrefabAI.GetType() == typeof(CargoTrainAI))
+                if (vehiclePrefabAI.GetType() == typeof(CargoPlaneAI) || vehiclePrefabAI.GetType() == typeof(CargoShipAI) || vehiclePrefabAI.GetType() == typeof(CargoTrainAI) || vehiclePrefabAI.GetType().Name.Equals("CargoFerryHarborAI"))
                 {
                     count += 5;
                 }
@@ -732,7 +739,8 @@ namespace EnhancedDistrictServices
                         return (
                             info.GetAI() is FishFarmAI ||
                             info.GetAI() is FishingHarborAI ||
-                            info.GetAI() is ProcessingFacilityAI);
+                            info.GetAI() is ProcessingFacilityAI ||
+                            info.GetAI() is MarketAI);
 
                     case ItemClass.Service.Monument:
                         return (info?.gameObject?.name == "ChirpX Launch Control Center");
@@ -825,7 +833,8 @@ namespace EnhancedDistrictServices
                         return (
                             info.GetAI() is FishFarmAI ||
                             info.GetAI() is FishingHarborAI ||
-                            info.GetAI() is ProcessingFacilityAI);
+                            info.GetAI() is ProcessingFacilityAI ||
+                            info.GetAI() is MarketAI);
 
                     case ItemClass.Service.Monument:
                         return (info?.gameObject?.name == "ChirpX Launch Control Center");
@@ -834,7 +843,8 @@ namespace EnhancedDistrictServices
                         return !(
                             info.GetAI() is AuxiliaryBuildingAI ||
                             info.GetAI() is DummyBuildingAI ||
-                            info.GetAI() is MainIndustryBuildingAI);
+                            info.GetAI() is MainIndustryBuildingAI ||
+                            info.GetAI() is ProcessingFacilityAI);
 
                     case ItemClass.Service.PublicTransport:
                         return (
@@ -894,6 +904,14 @@ namespace EnhancedDistrictServices
                 return GetSupplyBuildingOutputMaterial(destination) == sourceMaterial;
             }
 
+            if (info?.GetService() == ItemClass.Service.PublicTransport && info?.GetSubService() == ItemClass.SubService.PublicTransportPost && info?.GetAI() is PostOfficeAI postOfficeAI)
+            {
+                return sourceMaterial == TransferManager.TransferReason.SortedMail ||
+                        sourceMaterial == TransferManager.TransferReason.UnsortedMail ||
+                        sourceMaterial == TransferManager.TransferReason.IncomingMail ||
+                        sourceMaterial == TransferManager.TransferReason.OutgoingMail;
+            }
+
             if (info?.GetService() == ItemClass.Service.Water && info?.GetAI() is HeatingPlantAI)
             {
                 return sourceMaterial == TransferManager.TransferReason.Petrol;
@@ -942,9 +960,7 @@ namespace EnhancedDistrictServices
                 material == TransferManager.TransferReason.ElderCare ||
                 material == TransferManager.TransferReason.Student1 ||
                 material == TransferManager.TransferReason.Student2 ||
-                material == TransferManager.TransferReason.Taxi ||
-
-                material == TransferManager.TransferReason.UnsortedMail;
+                material == TransferManager.TransferReason.Taxi;
         }
 
         /// <summary>
@@ -979,7 +995,11 @@ namespace EnhancedDistrictServices
                 material == TransferManager.TransferReason.Fish ||
                 material == TransferManager.TransferReason.Goods ||
                 material == TransferManager.TransferReason.LuxuryProducts ||
-                material == TransferManager.TransferReason.SortedMail;
+                
+                material == TransferManager.TransferReason.SortedMail ||
+                material == TransferManager.TransferReason.UnsortedMail ||
+                material == TransferManager.TransferReason.IncomingMail ||
+                material == TransferManager.TransferReason.OutgoingMail;
         }
 
         /// <summary>

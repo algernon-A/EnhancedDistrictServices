@@ -120,7 +120,9 @@ namespace EnhancedDistrictServices
 
         public UITabstrip UIInputMode;
         public UIButton UIIncomingTab;
+        public UIButton UIIncomingTab2;
         public UIButton UIOutgoingTab;
+        public UIButton UIOutgoingTab2;
         public UIButton UIVehiclesTab;
         public UIButton UIGlobalTab;
 
@@ -475,7 +477,7 @@ namespace EnhancedDistrictServices
             return textField;
         }
 
-        private static UIButton GetUITabstripButtonTemplate(UIComponent parent)
+        public static UIButton GetUITabstripButtonTemplate(UIComponent parent)
         {
             var buttonTemplate = parent.AddUIComponent<UIButton>();
             buttonTemplate.Hide();

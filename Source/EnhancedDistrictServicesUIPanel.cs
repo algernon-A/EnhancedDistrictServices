@@ -16,7 +16,9 @@ namespace EnhancedDistrictServices
             OUTGOING = 0,
             INCOMING = 1,
             VEHICLES = 2,
-            GLOBAL = 3
+            GLOBAL = 3,
+            OUTGOING2 = 4,
+            INCOMING2 = 5,
         }
 
         /// <summary>
@@ -171,6 +173,34 @@ namespace EnhancedDistrictServices
                     UpdateUIInputMode(InputMode.INCOMING);
                 });
             };
+            var my_building = Singleton<BuildingManager>.instance.m_buildings.m_buffer[m_currBuildingId];
+            var my_buildingInfo = my_building.Info;
+            if(my_buildingInfo.GetAI() is PostOfficeAI || my_buildingInfo.m_buildingAI.GetType().Name.Equals("NewPoliceStationAI") ||
+                (my_buildingInfo.GetAI() is HelicopterDepotAI && my_buildingInfo.GetService() == ItemClass.Service.PoliceDepartment && (my_building.m_flags & Building.Flags.Downgrading) == 0))
+            {
+                var buttonTemplate = GetUITabstripButtonTemplate(this);
+                UIOutgoingTab2 = UIInputMode.AddTab("Outgoing2", buttonTemplate, true);
+                UIIncomingTab2 = UIInputMode.AddTab("Incoming2", buttonTemplate, true);
+                UIOutgoingTab2.eventClicked += (c, p) =>
+                {
+                    Logger.LogVerbose("EnhancedDistrictServicedUIPanel::UIOutgoingTab2 Clicked");
+                    Singleton<SimulationManager>.instance.AddAction(() =>
+                    {
+                        UpdateUIInputMode(InputMode.OUTGOING2);
+                    });
+                };
+
+                UIIncomingTab2.eventClicked += (c, p) =>
+                {
+                    Logger.LogVerbose("EnhancedDistrictServicedUIPanel::UIIncomingTab2 Clicked");
+                    Singleton<SimulationManager>.instance.AddAction(() =>
+                    {
+                        UpdateUIInputMode(InputMode.INCOMING2);
+                    });
+                };
+            }
+
+            
 
             if (UIVehiclesTab != null)
             {
@@ -698,7 +728,9 @@ namespace EnhancedDistrictServices
 
             var inputType = TransferManagerInfo.GetBuildingInputType(m_currBuildingId);
             ShowTab("Outgoing", (inputType & InputType.OUTGOING) != InputType.NONE);
+            ShowTab("Outgoing2", (inputType & InputType.OUTGOING2) != InputType.NONE);
             ShowTab("Incoming", (inputType & InputType.INCOMING) != InputType.NONE);
+            ShowTab("Incoming2", (inputType & InputType.INCOMING2) != InputType.NONE);
             if (Settings.enableCustomVehicles)
                 ShowTab("Vehicles", (inputType & InputType.VEHICLES) != InputType.NONE);
             ShowTab("Global", m_currBuildingId != 0);
@@ -710,6 +742,14 @@ namespace EnhancedDistrictServices
             else if ((inputType & InputType.INCOMING) != InputType.NONE)
             {
                 UpdateUIInputMode(InputMode.INCOMING);
+            }
+            else if ((inputType & InputType.OUTGOING2) != InputType.NONE)
+            {
+                UpdateUIInputMode(InputMode.OUTGOING2);
+            }
+            else if ((inputType & InputType.INCOMING2) != InputType.NONE)
+            {
+                UpdateUIInputMode(InputMode.INCOMING2);
             }
             else if (Settings.enableCustomVehicles && (inputType & InputType.VEHICLES) != InputType.NONE)
             {
@@ -848,6 +888,77 @@ namespace EnhancedDistrictServices
                     AddTabContainerRow();
                     AddElementToTabContainerRow(GlobalOutsideToOutsideMaxPerc);
                     AddElementToTabContainerRow(GlobalOutsideToOutsideMaxPercLabel);
+                    break;
+
+                case InputMode.OUTGOING2:
+                    AddTabContainerRow();
+                    AddElementToTabContainerRow(UIAllLocalAreasCheckBox);
+
+                    var info1 = BuildingManager.instance.m_buildings.m_buffer[m_currBuildingId].Info;
+                    if (TransferManagerInfo.IsSupplyChainBuilding(m_currBuildingId) || info1.GetAI() is FishFarmAI || info1.GetAI() is FishingHarborAI)
+                    {
+                        AddElementToTabContainerRow(UIAllOutsideConnectionsCheckBox);
+                    }
+                    else
+                    {
+                        ShowComponent(UIAllOutsideConnectionsCheckBox, false);
+                    }
+
+                    if (TransferManagerInfo.IsSupplyChainBuilding(m_currBuildingId))
+                    {
+                        AddTabContainerRow();
+                        AddElementToTabContainerRow(UISupplyReserve);
+                        AddElementToTabContainerRow(UISupplyReserveLabel);
+
+                        AddTabContainerRow();
+                        AddElementToTabContainerRow(UISupplyChain);
+                        AddElementToTabContainerRow(UISupplyChainLabel);
+                    }
+                    else
+                    {
+                        ShowComponent(UISupplyReserve, false);
+                        ShowComponent(UISupplyReserveLabel, false);
+                        ShowComponent(UISupplyChain, false);
+                        ShowComponent(UISupplyChainLabel, false);
+                    }
+
+                    AddTabContainerRow();
+                    AddElementToTabContainerRow(UIDistrictsSummary);
+                    AddElementToTabContainerRow(UIDistrictsDropDown);
+
+                    ShowComponent(UIVehicleDefaultsCheckBox, false);
+                    ShowComponent(UIVehiclesSummary, false);
+                    ShowComponent(UIVehiclesDropDown, false);
+                    ShowComponent(GlobalIntensity, false);
+                    ShowComponent(GlobalIntensityLabel, false);
+                    ShowComponent(GlobalOutsideToOutsideMaxPerc, false);
+                    ShowComponent(GlobalOutsideToOutsideMaxPercLabel, false);
+                    break;
+
+                case InputMode.INCOMING2:
+                    AddTabContainerRow();
+                    AddElementToTabContainerRow(UIAllLocalAreasCheckBox);
+                    AddElementToTabContainerRow(UIAllOutsideConnectionsCheckBox);
+
+                    ShowComponent(UISupplyReserve, false);
+                    ShowComponent(UISupplyReserveLabel, false);
+
+                    AddTabContainerRow();
+                    AddElementToTabContainerRow(UISupplyChain);
+                    AddElementToTabContainerRow(UISupplyChainLabel);
+
+                    AddTabContainerRow();
+                    AddElementToTabContainerRow(UIDistrictsSummary);
+                    AddElementToTabContainerRow(UIDistrictsDropDown);
+
+                    ShowComponent(UIVehicleDefaultsCheckBox, false);
+                    ShowComponent(UIVehiclesSummary, false);
+                    ShowComponent(UIVehiclesDropDown, false);
+                    ShowComponent(GlobalIntensity, false);
+                    ShowComponent(GlobalIntensityLabel, false);
+                    ShowComponent(GlobalOutsideToOutsideMaxPerc, false);
+                    ShowComponent(GlobalOutsideToOutsideMaxPercLabel, false);
+
                     break;
 
                 default:
