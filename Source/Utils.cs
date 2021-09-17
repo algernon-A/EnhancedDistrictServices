@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using HarmonyLib;
+using System.Reflection;
 
 namespace EnhancedDistrictServices
 {
@@ -12,6 +14,34 @@ namespace EnhancedDistrictServices
     /// </summary>
     public static class Utils
     {
+        private const string HarmonyId = "EnhancedDistrictServices";
+
+        private static bool patched = false;
+
+        public static void PatchAll() {
+            if (patched) return;
+
+            UnityEngine.Debug.Log("EnhancedDistrictServices: Patching...");
+
+            patched = true;
+
+            // Apply your patches here!
+            // Harmony.DEBUG = true;
+            var harmony = new Harmony("EnhancedDistrictServices");
+            harmony.PatchAll(Assembly.GetExecutingAssembly());
+        }
+
+        public static void UnpatchAll() {
+            if (!patched) return;
+
+            var harmony = new Harmony(HarmonyId);
+            harmony.UnpatchAll(HarmonyId);
+
+            patched = false;
+
+            UnityEngine.Debug.Log("EnhancedDistrictServices: Reverted...");
+        }
+
         public static void DisplayMessage(string str1, string str2, string str3)
         {
             try
