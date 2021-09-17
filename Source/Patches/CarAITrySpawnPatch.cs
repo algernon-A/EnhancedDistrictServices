@@ -1,8 +1,7 @@
 ﻿using ColossalFramework;
 using ColossalFramework.Math;
-using Harmony;
+using HarmonyLib;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace EnhancedDistrictServices
@@ -10,9 +9,9 @@ namespace EnhancedDistrictServices
     /// <summary>
     /// Purpose: Better matching has a consequence - a tsunami of vehicles waiting to spawn at outside connections.
     /// </summary>
-    public class CarAITrySpawnPatch
+    public static class CarAITrySpawnPatch
     {
-        public static void Enable(HarmonyInstance harmony)
+        public static void Enable(Harmony harmony)
         {
             var original = typeof(CarAI).GetMethod("TrySpawn");
             if (original == null)
@@ -31,6 +30,7 @@ namespace EnhancedDistrictServices
 
         private static bool[] m_congestionStatus = new bool[BuildingManager.MAX_BUILDING_COUNT];
         private static int[] m_vehicleSpawnCounter = new int[BuildingManager.MAX_BUILDING_COUNT];
+
 
         public static bool Prefix(ushort vehicleID, ref Vehicle vehicleData, ref bool __result)
         {
@@ -178,24 +178,5 @@ namespace EnhancedDistrictServices
             return 0;
         }
 
-        private static void GetSourceTarget(ushort vehicleID, ref Vehicle vehicleData, out ushort source, out ushort target)
-        {
-            var driverInstance = GetDriverInstance(vehicleID, ref vehicleData);
-            var driver = CitizenManager.instance.m_instances.m_buffer[driverInstance].m_citizen;
-
-            source = VehicleManager.instance.m_vehicles.m_buffer[vehicleID].m_sourceBuilding;
-            target = VehicleManager.instance.m_vehicles.m_buffer[vehicleID].m_targetBuilding;
-            if (source == 0 && target == 0 && driver != 0)
-            {
-                source = CitizenManager.instance.m_instances.m_buffer[driverInstance].m_sourceBuilding;
-                target = CitizenManager.instance.m_instances.m_buffer[driverInstance].m_targetBuilding;
-            }
-        }
-
-        private static bool IsOutsideRoadConnection(ushort buildingId)
-        {
-            var info = Singleton<BuildingManager>.instance.m_buildings.m_buffer[buildingId].Info;
-            return info.m_buildingAI is OutsideConnectionAI outsideConnectionAI && outsideConnectionAI.m_transportInfo?.m_vehicleType == VehicleInfo.VehicleType.Car;
-        }
     }
 }
