@@ -66,6 +66,7 @@ namespace EnhancedDistrictServices
             {
                 if (info?.GetService() == ItemClass.Service.PublicTransport && info?.GetSubService() == ItemClass.SubService.PublicTransportPost && info?.GetAI() is PostOfficeAI)
                 {
+                    result |= InputType.OUTGOING;
                     result |= InputType.OUTGOING2;
                 }
                 if ((info?.GetService() == ItemClass.Service.Electricity && info?.GetAI() is PowerPlantAI) ||
@@ -87,6 +88,7 @@ namespace EnhancedDistrictServices
                 result |= InputType.SUPPLY_CHAIN;
                 if (info?.GetService() == ItemClass.Service.PublicTransport && info?.GetSubService() == ItemClass.SubService.PublicTransportPost && info?.GetAI() is PostOfficeAI)
                 {
+                    result |= InputType.INCOMING;
                     result |= InputType.INCOMING2;
                 }
                 if (!(info?.GetAI() is ExtractingFacilityAI || info?.GetAI() is FishFarmAI || info?.GetAI() is FishingHarborAI))
@@ -121,9 +123,19 @@ namespace EnhancedDistrictServices
                     txtItems.Add($"Incoming");
                 }
 
+                if ((inputType & InputType.INCOMING2) != InputType.NONE)
+                {
+                    txtItems.Add($"Incoming2");
+                }
+
                 if ((inputType & InputType.OUTGOING) != InputType.NONE)
                 {
                     txtItems.Add($"Outgoing");
+                }
+
+                if ((inputType & InputType.OUTGOING2) != InputType.NONE)
+                {
+                    txtItems.Add($"Outgoing2");
                 }
             }
 
@@ -904,7 +916,7 @@ namespace EnhancedDistrictServices
                 return GetSupplyBuildingOutputMaterial(destination) == sourceMaterial;
             }
 
-            if (info?.GetService() == ItemClass.Service.PublicTransport && info?.GetSubService() == ItemClass.SubService.PublicTransportPost && info?.GetAI() is PostOfficeAI postOfficeAI)
+            if (info?.GetService() == ItemClass.Service.PublicTransport && info?.GetSubService() == ItemClass.SubService.PublicTransportPost && info?.GetAI() is PostOfficeAI)
             {
                 return sourceMaterial == TransferManager.TransferReason.SortedMail ||
                         sourceMaterial == TransferManager.TransferReason.UnsortedMail ||
