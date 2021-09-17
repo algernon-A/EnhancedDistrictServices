@@ -1,10 +1,10 @@
 ﻿using ColossalFramework;
 using ColossalFramework.Plugins;
 using ColossalFramework.UI;
-using Harmony;
+using CitiesHarmony.API;
+using HarmonyLib;
 using ICities;
 using System;
-using System.Reflection;
 
 namespace EnhancedDistrictServices
 {
@@ -16,7 +16,7 @@ namespace EnhancedDistrictServices
         public const string version = "1.0.25";
         public string Name => $"Enhanced District Services {version}";
         public string Description => "Enhanced District Services mod for Cities Skylines, which allows more granular control of services and supply chains.";
-        public HarmonyInstance Harmony { get; private set; }
+        public Harmony Harmony { get; private set; }
 
         public EnhancedDistrictServicesMod()
         {
@@ -34,10 +34,18 @@ namespace EnhancedDistrictServices
             }
         }
 
+        public void OnEnabled() {
+            HarmonyHelper.DoOnHarmonyReady(() => Utils.PatchAll());
+        }
+
+        public void OnDisabled() {
+            if (HarmonyHelper.IsHarmonyInstalled) Utils.UnpatchAll();
+        }
+
         public void OnCreated(ILoading loading)
         {
-            Harmony = HarmonyInstance.Create("com.pachang.enhanceddistrictservices");
-            Harmony.PatchAll(Assembly.GetExecutingAssembly());
+            var Harmony = new Harmony("EnhancedDistrictServices");
+            HarmonyHelper.DoOnHarmonyReady(() => Utils.PatchAll());
 
             if (Settings.disableVehicleCollisionCheck)
             {
