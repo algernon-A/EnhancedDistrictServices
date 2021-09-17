@@ -187,6 +187,9 @@ namespace EnhancedDistrictServices
 
         private static void RegisterCargoBuilding(ushort buildingId, ItemClass.SubService subService)
         {
+            Building[] buffer = Singleton<BuildingManager>.instance.m_buildings.m_buffer;
+            var building = buffer[(int) buildingId];
+            var buildingInfo = building.Info;
             switch (subService)
             {
                 case ItemClass.SubService.PublicTransportPlane:
@@ -198,8 +201,8 @@ namespace EnhancedDistrictServices
 
                     break;
 
-                case ItemClass.SubService.PublicTransportShip:
-                    if (!m_shipCargoBuildings.Contains(buildingId))
+                case ItemClass.SubService.PublicTransportShip: // support for cargo barges to not include as an outside connection
+                    if (!m_shipCargoBuildings.Contains(buildingId) && !buildingInfo.m_buildingAI.GetType().Name.Equals("CargoFerryHarborAI"))
                     {
                         m_shipCargoBuildings.Add(buildingId);
                         Logger.Log($"OutsideConnectionInfo: Registering B{buildingId} as ship cargo building, count={m_shipCargoBuildings.Count}");
