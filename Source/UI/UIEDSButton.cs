@@ -1,4 +1,5 @@
 ﻿using ColossalFramework.UI;
+using System.Reflection;
 using UnityEngine;
 
 namespace EnhancedDistrictServices
@@ -160,6 +161,9 @@ namespace EnhancedDistrictServices
                 "EDSHovered",
                 "EDSPressed"
             };
+
+            /*var myAssembly = Assembly.GetExecutingAssembly();
+            var myAssemblyName = myAssembly.GetName().Name;*/
 
             atlas = ResourceLoader.CreateTextureAtlas("EDS", spriteNames, "EnhancedDistrictServices.Source.Icons.");
         }
