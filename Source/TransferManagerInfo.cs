@@ -61,13 +61,15 @@ namespace EnhancedDistrictServices
             var result = InputType.NONE;
 
             // The only building type for which we will not show an outgoing tab is coal and heating power plants.
+
+            var my_building = BuildingManager.instance.m_buildings.m_buffer[building];
             var info = BuildingManager.instance.m_buildings.m_buffer[building].Info;
             if (TransferManagerInfo.IsDistrictServicesBuilding(building))
             {
-                if (info?.GetService() == ItemClass.Service.PublicTransport && info?.GetSubService() == ItemClass.SubService.PublicTransportPost && info?.GetAI() is PostOfficeAI)
+                if (info?.GetService() == ItemClass.Service.PublicTransport && info?.GetSubService() == ItemClass.SubService.PublicTransportPost && info?.GetAI() is PostOfficeAI || 
+                    info?.GetAI() is HelicopterDepotAI && info?.GetService() == ItemClass.Service.PoliceDepartment && (my_building.m_flags & Building.Flags.Downgrading) == 0)
                 {
-                    result |= InputType.OUTGOING;
-                    result |= InputType.OUTGOING2;
+                    result |= InputType.OUTGOING & InputType.OUTGOING2;
                 }
                 if ((info?.GetService() == ItemClass.Service.Electricity && info?.GetAI() is PowerPlantAI) ||
                     (info?.GetService() == ItemClass.Service.Water && info?.GetAI() is HeatingPlantAI) ||
@@ -86,10 +88,10 @@ namespace EnhancedDistrictServices
             if (Settings.enableIndustriesControl && TransferManagerInfo.IsSupplyChainBuilding(building))
             {
                 result |= InputType.SUPPLY_CHAIN;
-                if (info?.GetService() == ItemClass.Service.PublicTransport && info?.GetSubService() == ItemClass.SubService.PublicTransportPost && info?.GetAI() is PostOfficeAI)
+                if (info?.GetService() == ItemClass.Service.PublicTransport && info?.GetSubService() == ItemClass.SubService.PublicTransportPost && info?.GetAI() is PostOfficeAI ||
+                    info?.GetAI() is HelicopterDepotAI && info?.GetService() == ItemClass.Service.PoliceDepartment && (my_building.m_flags & Building.Flags.Downgrading) == 0)
                 {
-                    result |= InputType.INCOMING;
-                    result |= InputType.INCOMING2;
+                    result |= InputType.INCOMING & InputType.INCOMING2;
                 }
                 if (!(info?.GetAI() is ExtractingFacilityAI || info?.GetAI() is FishFarmAI || info?.GetAI() is FishingHarborAI))
                 {
