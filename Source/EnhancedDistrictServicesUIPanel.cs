@@ -173,35 +173,24 @@ namespace EnhancedDistrictServices
                     UpdateUIInputMode(InputMode.INCOMING);
                 });
             };
-            var my_building = Singleton<BuildingManager>.instance.m_buildings.m_buffer[m_currBuildingId];
-            var my_buildingInfo = my_building.Info;
-            if(my_buildingInfo.GetAI() is PostOfficeAI || my_buildingInfo.m_buildingAI.GetType().Name.Equals("NewPoliceStationAI") ||
-                (my_buildingInfo.GetAI() is HelicopterDepotAI && my_buildingInfo.GetService() == ItemClass.Service.PoliceDepartment && (my_building.m_flags & Building.Flags.Downgrading) == 0))
-            {
-                var buttonTemplate = GetUITabstripButtonTemplate(this);
-                UIOutgoingTab2 = UIInputMode.AddTab("Outgoing2", buttonTemplate, true);
-                UIIncomingTab2 = UIInputMode.AddTab("Incoming2", buttonTemplate, true);
-
-                UIOutgoingTab2.eventClicked += (c, p) =>
-                {
-                    Logger.LogVerbose("EnhancedDistrictServicedUIPanel::UIOutgoingTab2 Clicked");
-                    Singleton<SimulationManager>.instance.AddAction(() =>
-                    {
-                        UpdateUIInputMode(InputMode.OUTGOING2);
-                    });
-                };
-
-                UIIncomingTab2.eventClicked += (c, p) =>
-                {
-                    Logger.LogVerbose("EnhancedDistrictServicedUIPanel::UIIncomingTab2 Clicked");
-                    Singleton<SimulationManager>.instance.AddAction(() =>
-                    {
-                        UpdateUIInputMode(InputMode.INCOMING2);
-                    });
-                };
-            }
-
             
+            UIOutgoingTab2.eventClicked += (c, p) =>
+            {
+                Logger.LogVerbose("EnhancedDistrictServicedUIPanel::UIOutgoingTab2 Clicked");
+                Singleton<SimulationManager>.instance.AddAction(() =>
+                {
+                    UpdateUIInputMode(InputMode.OUTGOING2);
+                });
+            };
+
+            UIIncomingTab2.eventClicked += (c, p) =>
+            {
+                Logger.LogVerbose("EnhancedDistrictServicedUIPanel::UIIncomingTab2 Clicked");
+                Singleton<SimulationManager>.instance.AddAction(() =>
+                {
+                    UpdateUIInputMode(InputMode.INCOMING2);
+                });
+            };
 
             if (UIVehiclesTab != null)
             {

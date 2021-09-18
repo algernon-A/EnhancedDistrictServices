@@ -67,9 +67,10 @@ namespace EnhancedDistrictServices
             if (TransferManagerInfo.IsDistrictServicesBuilding(building))
             {
                 if (info?.GetService() == ItemClass.Service.PublicTransport && info?.GetSubService() == ItemClass.SubService.PublicTransportPost && info?.GetAI() is PostOfficeAI || 
-                    info?.GetAI() is HelicopterDepotAI && info?.GetService() == ItemClass.Service.PoliceDepartment && (my_building.m_flags & Building.Flags.Downgrading) == 0)
+                    ((info?.GetAI() is HelicopterDepotAI && info?.GetService() == ItemClass.Service.PoliceDepartment) || info.GetAI().GetType().Name.Equals("NewPoliceStationAI")) && (my_building.m_flags & Building.Flags.Downgrading) == 0)
                 {
-                    result |= InputType.OUTGOING & InputType.OUTGOING2;
+                    result |= InputType.OUTGOING;
+                    result |= InputType.OUTGOING2;
                 }
                 if ((info?.GetService() == ItemClass.Service.Electricity && info?.GetAI() is PowerPlantAI) ||
                     (info?.GetService() == ItemClass.Service.Water && info?.GetAI() is HeatingPlantAI) ||
@@ -88,10 +89,11 @@ namespace EnhancedDistrictServices
             if (Settings.enableIndustriesControl && TransferManagerInfo.IsSupplyChainBuilding(building))
             {
                 result |= InputType.SUPPLY_CHAIN;
-                if (info?.GetService() == ItemClass.Service.PublicTransport && info?.GetSubService() == ItemClass.SubService.PublicTransportPost && info?.GetAI() is PostOfficeAI ||
-                    info?.GetAI() is HelicopterDepotAI && info?.GetService() == ItemClass.Service.PoliceDepartment && (my_building.m_flags & Building.Flags.Downgrading) == 0)
+                if (info?.GetService() == ItemClass.Service.PublicTransport && info?.GetSubService() == ItemClass.SubService.PublicTransportPost && info?.GetAI() is PostOfficeAI || 
+                    ((info?.GetAI() is HelicopterDepotAI && info?.GetService() == ItemClass.Service.PoliceDepartment) || info.GetAI().GetType().Name.Equals("NewPoliceStationAI")) && (my_building.m_flags & Building.Flags.Downgrading) == 0)
                 {
-                    result |= InputType.INCOMING & InputType.INCOMING2;
+                    result |= InputType.INCOMING; 
+                    result |= InputType.INCOMING2;
                 }
                 if (!(info?.GetAI() is ExtractingFacilityAI || info?.GetAI() is FishFarmAI || info?.GetAI() is FishingHarborAI))
                 {
