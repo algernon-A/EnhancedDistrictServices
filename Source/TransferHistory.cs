@@ -1,4 +1,6 @@
 ﻿using ColossalFramework;
+using ColossalFramework.Plugins;
+using ICities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,7 +103,10 @@ namespace EnhancedDistrictServices
             {
                 var timestamp = Singleton<SimulationManager>.instance.m_currentGameTime;
                 var expiry = timestamp.AddDays(-MaterialEvents.MAX_TTL);
-
+                if(CheckIfRealTimeExist())
+                {
+                    expiry = timestamp.AddMinutes(-MaterialEvents.MAX_TTL);
+                }
                 foreach (var list in Events.Values)
                 {
                     for (int i = 0; i < list.Count;)
@@ -116,6 +121,19 @@ namespace EnhancedDistrictServices
                         }
                     }
                 }
+            }
+
+            public bool CheckIfRealTimeExist()
+            {
+                foreach (PluginManager.PluginInfo mod in Singleton<PluginManager>.instance.GetPluginsInfo())
+                {
+                    string strModName = ((IUserMod)mod.userModInstance).Name;
+                    if(strModName.Contains("Real Time") && mod.isEnabled)
+                    {
+                        return true;
+                    }
+                }
+                return false;
             }
         }
 
