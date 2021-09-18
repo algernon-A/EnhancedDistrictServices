@@ -202,7 +202,7 @@ namespace EnhancedDistrictServices
                     break;
 
                 case ItemClass.SubService.PublicTransportShip: // support for cargo barges to not include as an outside connection
-                    if (!m_shipCargoBuildings.Contains(buildingId) && !buildingInfo.m_buildingAI.GetType().Name.Equals("CargoFerryHarborAI"))
+                    if (!m_shipCargoBuildings.Contains(buildingId) && !buildingInfo.m_buildingAI.GetType().Name.Equals("CargoFerryWarehouseHarborAI"))
                     {
                         m_shipCargoBuildings.Add(buildingId);
                         Logger.Log($"OutsideConnectionInfo: Registering B{buildingId} as ship cargo building, count={m_shipCargoBuildings.Count}");
