@@ -7,12 +7,18 @@ namespace EnhancedDistrictServices.Serialization
     public class Datav4
     {
         public bool[] InputBuildingToAllLocalAreas = new bool[BuildingManager.MAX_BUILDING_COUNT];
+        public bool[] InputBuildingToAllLocalAreas2 = new bool[BuildingManager.MAX_BUILDING_COUNT];
         public bool[] InputBuildingToOutsideConnections = new bool[BuildingManager.MAX_BUILDING_COUNT];
+        public bool[] InputBuildingToOutsideConnections2 = new bool[BuildingManager.MAX_BUILDING_COUNT];
         public List<int>[] InputBuildingToDistrictServiced = new List<int>[BuildingManager.MAX_BUILDING_COUNT];
+        public List<int>[] InputBuildingToDistrictServiced2 = new List<int>[BuildingManager.MAX_BUILDING_COUNT];
 
         public bool[] OutputBuildingToAllLocalAreas = new bool[BuildingManager.MAX_BUILDING_COUNT];
+        public bool[] OutputBuildingToAllLocalAreas2 = new bool[BuildingManager.MAX_BUILDING_COUNT];
         public bool[] OutputBuildingToOutsideConnections = new bool[BuildingManager.MAX_BUILDING_COUNT];
+        public bool[] OutputBuildingToOutsideConnections2 = new bool[BuildingManager.MAX_BUILDING_COUNT];
         public List<int>[] OutputBuildingToDistrictServiced = new List<int>[BuildingManager.MAX_BUILDING_COUNT];
+        public List<int>[] OutputBuildingToDistrictServiced2 = new List<int>[BuildingManager.MAX_BUILDING_COUNT];
 
         public int[] BuildingToInternalSupplyBuffer = new int[BuildingManager.MAX_BUILDING_COUNT];
         public List<int>[] BuildingToBuildingServiced = new List<int>[BuildingManager.MAX_BUILDING_COUNT];

@@ -11,7 +11,7 @@ namespace EnhancedDistrictServices
     /// </summary>
     public class EnhancedDistrictServicesUIPanel : EnhancedDistrictServicesUIPanelBase<EnhancedDistrictServicesUIPanel>
     {
-        private enum InputMode
+        public enum InputMode
         {
             OUTGOING = 0,
             INCOMING = 1,
@@ -261,8 +261,8 @@ namespace EnhancedDistrictServices
             UIAllLocalAreasCheckBox.eventCheckChanged += (c, t) =>
             {
                 if (m_currBuildingId == 0 || 
-                    ((m_inputMode == InputMode.INCOMING || m_inputMode == InputMode.INCOMING2) && t == Constraints.InputAllLocalAreas(m_currBuildingId)) ||
-                    ((m_inputMode == InputMode.OUTGOING || m_inputMode == InputMode.OUTGOING2) && t == Constraints.OutputAllLocalAreas(m_currBuildingId)))
+                    (m_inputMode == InputMode.INCOMING && t == Constraints.InputAllLocalAreas(m_inputMode, m_currBuildingId)) ||
+                    (m_inputMode == InputMode.OUTGOING && t == Constraints.OutputAllLocalAreas(m_inputMode, m_currBuildingId)))
                 {
                     return;
                 }
@@ -270,14 +270,43 @@ namespace EnhancedDistrictServices
                 Logger.LogVerbose($"EnhancedDistrictServicedUIPanel::UIAllLocalAreasCheckBox CheckChanged {t}");
                 Singleton<SimulationManager>.instance.AddAction(() =>
                 {
-                    if (m_inputMode == InputMode.INCOMING || m_inputMode == InputMode.INCOMING2)
+                    if (m_inputMode == InputMode.INCOMING)
                     {
-                        Constraints.SetAllInputLocalAreas(m_currBuildingId, t);
+                        Constraints.SetAllInputLocalAreas(m_inputMode, m_currBuildingId, t);
                     }
 
-                    if (m_inputMode == InputMode.OUTGOING || m_inputMode == InputMode.OUTGOING2)
+                    if (m_inputMode == InputMode.OUTGOING)
                     {
-                        Constraints.SetAllOutputLocalAreas(m_currBuildingId, t);
+                        Constraints.SetAllOutputLocalAreas(m_inputMode, m_currBuildingId, t);
+                    }
+
+                    UpdateUIAllLocalAreasCheckBox();
+
+                    UpdateUISupplyChain();
+                    UpdateUIDistrictsSummary();
+                });
+            };
+
+            UIAllLocalAreasCheckBox2.eventCheckChanged += (c, t) =>
+            {
+                if (m_currBuildingId == 0 || 
+                    (m_inputMode == InputMode.INCOMING2 && t == Constraints.InputAllLocalAreas(m_inputMode, m_currBuildingId)) ||
+                    (m_inputMode == InputMode.OUTGOING2 && t == Constraints.OutputAllLocalAreas(m_inputMode, m_currBuildingId)))
+                {
+                    return;
+                }
+
+                Logger.LogVerbose($"EnhancedDistrictServicedUIPanel::UIAllLocalAreasCheckBox2 CheckChanged {t}");
+                Singleton<SimulationManager>.instance.AddAction(() =>
+                {
+                    if (m_inputMode == InputMode.INCOMING2)
+                    {
+                        Constraints.SetAllInputLocalAreas(m_inputMode, m_currBuildingId, t);
+                    }
+
+                    if (m_inputMode == InputMode.OUTGOING2)
+                    {
+                        Constraints.SetAllOutputLocalAreas(m_inputMode, m_currBuildingId, t);
                     }
 
                     UpdateUIAllLocalAreasCheckBox();
@@ -290,8 +319,8 @@ namespace EnhancedDistrictServices
             UIAllOutsideConnectionsCheckBox.eventCheckChanged += (c, t) =>
             {
                 if (m_currBuildingId == 0 ||
-                    ((m_inputMode == InputMode.INCOMING || m_inputMode == InputMode.INCOMING2) && t == Constraints.InputOutsideConnections(m_currBuildingId)) ||
-                    ((m_inputMode == InputMode.OUTGOING || m_inputMode == InputMode.OUTGOING2) && t == Constraints.OutputOutsideConnections(m_currBuildingId)))
+                    (m_inputMode == InputMode.INCOMING && t == Constraints.InputOutsideConnections(m_inputMode, m_currBuildingId)) ||
+                    (m_inputMode == InputMode.OUTGOING && t == Constraints.OutputOutsideConnections(m_inputMode, m_currBuildingId)))
                 {
                     return;
                 }
@@ -299,14 +328,41 @@ namespace EnhancedDistrictServices
                 Logger.LogVerbose($"EnhancedDistrictServicedUIPanel::UIAllOutsideConnectionsCheckBox CheckChanged {t}");
                 Singleton<SimulationManager>.instance.AddAction(() =>
                 {
-                    if (m_inputMode == InputMode.INCOMING || m_inputMode == InputMode.INCOMING2)
+                    if (m_inputMode == InputMode.INCOMING)
                     {
-                        Constraints.SetAllInputOutsideConnections(m_currBuildingId, t);
+                        Constraints.SetAllInputOutsideConnections(m_inputMode, m_currBuildingId, t);
                     }
 
-                    if (m_inputMode == InputMode.OUTGOING || m_inputMode == InputMode.OUTGOING2)
+                    if (m_inputMode == InputMode.OUTGOING)
                     {
-                        Constraints.SetAllOutputOutsideConnections(m_currBuildingId, t);
+                        Constraints.SetAllOutputOutsideConnections(m_inputMode, m_currBuildingId, t);
+                    }
+
+                    UpdateUISupplyChain();
+                    UpdateUIDistrictsSummary();
+                });
+            };
+
+            UIAllOutsideConnectionsCheckBox2.eventCheckChanged += (c, t) =>
+            {
+                if (m_currBuildingId == 0 ||
+                    (m_inputMode == InputMode.INCOMING2 && t == Constraints.InputOutsideConnections(m_inputMode, m_currBuildingId)) ||
+                    (m_inputMode == InputMode.OUTGOING2 && t == Constraints.OutputOutsideConnections(m_inputMode, m_currBuildingId)))
+                {
+                    return;
+                }
+
+                Logger.LogVerbose($"EnhancedDistrictServicedUIPanel::UIAllOutsideConnectionsCheckBox2 CheckChanged {t}");
+                Singleton<SimulationManager>.instance.AddAction(() =>
+                {
+                    if (m_inputMode == InputMode.INCOMING2)
+                    {
+                        Constraints.SetAllInputOutsideConnections(m_inputMode, m_currBuildingId, t);
+                    }
+
+                    if (m_inputMode == InputMode.OUTGOING2)
+                    {
+                        Constraints.SetAllOutputOutsideConnections(m_inputMode, m_currBuildingId, t);
                     }
 
                     UpdateUISupplyChain();
@@ -423,12 +479,12 @@ namespace EnhancedDistrictServices
                     return;
                 }
 
-                if ((m_inputMode == InputMode.INCOMING || m_inputMode == InputMode.INCOMING2) && UIDistrictsDropDown.GetChecked(t) == Constraints.InputDistrictParkServiced(m_currBuildingId)?.Contains(m_districtParkMapping[t]))
+                if ((m_inputMode == InputMode.INCOMING || m_inputMode == InputMode.INCOMING2) && UIDistrictsDropDown.GetChecked(t) == Constraints.InputDistrictParkServiced(m_inputMode, m_currBuildingId)?.Contains(m_districtParkMapping[t]))
                 {
                     return;
                 }
 
-                if ((m_inputMode == InputMode.OUTGOING || m_inputMode == InputMode.OUTGOING2) && UIDistrictsDropDown.GetChecked(t) == Constraints.OutputDistrictParkServiced(m_currBuildingId)?.Contains(m_districtParkMapping[t]))
+                if ((m_inputMode == InputMode.OUTGOING || m_inputMode == InputMode.OUTGOING2) && UIDistrictsDropDown.GetChecked(t) == Constraints.OutputDistrictParkServiced(m_inputMode, m_currBuildingId)?.Contains(m_districtParkMapping[t]))
                 {
                     return;
                 }
@@ -442,11 +498,11 @@ namespace EnhancedDistrictServices
                         {
                             if (UIDistrictsDropDown.GetChecked(t))
                             {
-                                Constraints.AddInputDistrictParkServiced(m_currBuildingId, m_districtParkMapping[t]);
+                                Constraints.AddInputDistrictParkServiced(m_inputMode, m_currBuildingId, m_districtParkMapping[t]);
                             }
                             else
                             {
-                                Constraints.RemoveInputDistrictParkServiced(m_currBuildingId, m_districtParkMapping[t]);
+                                Constraints.RemoveInputDistrictParkServiced(m_inputMode, m_currBuildingId, m_districtParkMapping[t]);
                             }
                         }
 
@@ -454,11 +510,11 @@ namespace EnhancedDistrictServices
                         {
                             if (UIDistrictsDropDown.GetChecked(t))
                             {
-                                Constraints.AddOutputDistrictParkServiced(m_currBuildingId, m_districtParkMapping[t]);
+                                Constraints.AddOutputDistrictParkServiced(m_inputMode, m_currBuildingId, m_districtParkMapping[t]);
                             }
                             else
                             {
-                                Constraints.RemoveOutputDistrictParkServiced(m_currBuildingId, m_districtParkMapping[t]);
+                                Constraints.RemoveOutputDistrictParkServiced(m_inputMode, m_currBuildingId, m_districtParkMapping[t]);
                             }
                         }
                     }
@@ -882,16 +938,16 @@ namespace EnhancedDistrictServices
 
                 case InputMode.OUTGOING2:
                     AddTabContainerRow();
-                    AddElementToTabContainerRow(UIAllLocalAreasCheckBox);
+                    AddElementToTabContainerRow(UIAllLocalAreasCheckBox2);
 
                     var info1 = BuildingManager.instance.m_buildings.m_buffer[m_currBuildingId].Info;
                     if (TransferManagerInfo.IsSupplyChainBuilding(m_currBuildingId) || info1.GetAI() is FishFarmAI || info1.GetAI() is FishingHarborAI)
                     {
-                        AddElementToTabContainerRow(UIAllOutsideConnectionsCheckBox);
+                        AddElementToTabContainerRow(UIAllOutsideConnectionsCheckBox2);
                     }
                     else
                     {
-                        ShowComponent(UIAllOutsideConnectionsCheckBox, false);
+                        ShowComponent(UIAllOutsideConnectionsCheckBox2, false);
                     }
 
                     if (TransferManagerInfo.IsSupplyChainBuilding(m_currBuildingId))
@@ -914,7 +970,7 @@ namespace EnhancedDistrictServices
 
                     AddTabContainerRow();
                     AddElementToTabContainerRow(UIDistrictsSummary);
-                    AddElementToTabContainerRow(UIDistrictsDropDown);
+                    AddElementToTabContainerRow(UIDistrictsDropDown2);
 
                     ShowComponent(UIVehicleDefaultsCheckBox, false);
                     ShowComponent(UIVehiclesSummary, false);
@@ -927,8 +983,8 @@ namespace EnhancedDistrictServices
 
                 case InputMode.INCOMING2:
                     AddTabContainerRow();
-                    AddElementToTabContainerRow(UIAllLocalAreasCheckBox);
-                    AddElementToTabContainerRow(UIAllOutsideConnectionsCheckBox);
+                    AddElementToTabContainerRow(UIAllLocalAreasCheckBox2);
+                    AddElementToTabContainerRow(UIAllOutsideConnectionsCheckBox2);
 
                     ShowComponent(UISupplyReserve, false);
                     ShowComponent(UISupplyReserveLabel, false);
@@ -939,7 +995,7 @@ namespace EnhancedDistrictServices
 
                     AddTabContainerRow();
                     AddElementToTabContainerRow(UIDistrictsSummary);
-                    AddElementToTabContainerRow(UIDistrictsDropDown);
+                    AddElementToTabContainerRow(UIDistrictsDropDown2);
 
                     ShowComponent(UIVehicleDefaultsCheckBox, false);
                     ShowComponent(UIVehiclesSummary, false);
@@ -979,12 +1035,12 @@ namespace EnhancedDistrictServices
 
             if (m_inputMode == InputMode.INCOMING || m_inputMode == InputMode.INCOMING2)
             {
-                UIAllLocalAreasCheckBox.isChecked = Constraints.InputAllLocalAreas(m_currBuildingId);
+                UIAllLocalAreasCheckBox.isChecked = Constraints.InputAllLocalAreas(m_inputMode, m_currBuildingId);
             }
 
             if (m_inputMode == InputMode.OUTGOING || m_inputMode == InputMode.OUTGOING2)
             {
-                UIAllLocalAreasCheckBox.isChecked = Constraints.OutputAllLocalAreas(m_currBuildingId);
+                UIAllLocalAreasCheckBox.isChecked = Constraints.OutputAllLocalAreas(m_inputMode, m_currBuildingId);
             }
 
             switch (m_inputMode)
@@ -1014,22 +1070,22 @@ namespace EnhancedDistrictServices
                 case InputMode.OUTGOING2:
                     if (TransferManagerInfo.IsSupplyChainBuilding(m_currBuildingId))
                     {
-                        ShowComponent(UISupplyReserve, !UIAllLocalAreasCheckBox.isChecked);
-                        ShowComponent(UISupplyReserveLabel, !UIAllLocalAreasCheckBox.isChecked);
-                        ShowComponent(UISupplyChain, !UIAllLocalAreasCheckBox.isChecked);
-                        ShowComponent(UISupplyChainLabel, !UIAllLocalAreasCheckBox.isChecked);
+                        ShowComponent(UISupplyReserve, !UIAllLocalAreasCheckBox2.isChecked);
+                        ShowComponent(UISupplyReserveLabel, !UIAllLocalAreasCheckBox2.isChecked);
+                        ShowComponent(UISupplyChain, !UIAllLocalAreasCheckBox2.isChecked);
+                        ShowComponent(UISupplyChainLabel, !UIAllLocalAreasCheckBox2.isChecked);
                     }
 
-                    ShowComponent(UIDistrictsSummary, !UIAllLocalAreasCheckBox.isChecked);
-                    ShowComponent(UIDistrictsDropDown, !UIAllLocalAreasCheckBox.isChecked);
+                    ShowComponent(UIDistrictsSummary, !UIAllLocalAreasCheckBox2.isChecked);
+                    ShowComponent(UIDistrictsDropDown2, !UIAllLocalAreasCheckBox2.isChecked);
 
                     break;
 
                 case InputMode.INCOMING2:
-                    ShowComponent(UISupplyChain, !UIAllLocalAreasCheckBox.isChecked);
-                    ShowComponent(UISupplyChainLabel, !UIAllLocalAreasCheckBox.isChecked);
-                    ShowComponent(UIDistrictsSummary, !UIAllLocalAreasCheckBox.isChecked);
-                    ShowComponent(UIDistrictsDropDown, !UIAllLocalAreasCheckBox.isChecked);
+                    ShowComponent(UISupplyChain, !UIAllLocalAreasCheckBox2.isChecked);
+                    ShowComponent(UISupplyChainLabel, !UIAllLocalAreasCheckBox2.isChecked);
+                    ShowComponent(UIDistrictsSummary, !UIAllLocalAreasCheckBox2.isChecked);
+                    ShowComponent(UIDistrictsDropDown2, !UIAllLocalAreasCheckBox2.isChecked);
 
                     break;
 
@@ -1058,12 +1114,12 @@ namespace EnhancedDistrictServices
 
             if (m_inputMode == InputMode.INCOMING || m_inputMode == InputMode.INCOMING2)
             {
-                UIAllOutsideConnectionsCheckBox.isChecked = Constraints.InputOutsideConnections(m_currBuildingId);
+                UIAllOutsideConnectionsCheckBox.isChecked = Constraints.InputOutsideConnections(m_inputMode, m_currBuildingId);
             }
 
             if (m_inputMode == InputMode.OUTGOING || m_inputMode == InputMode.OUTGOING2)
             {
-                UIAllOutsideConnectionsCheckBox.isChecked = Constraints.OutputOutsideConnections(m_currBuildingId);
+                UIAllOutsideConnectionsCheckBox.isChecked = Constraints.OutputOutsideConnections(m_inputMode, m_currBuildingId);
             }
 
             UIAllOutsideConnectionsCheckBox.tooltip = "If enabled, serves all outside connections.";
@@ -1177,18 +1233,22 @@ namespace EnhancedDistrictServices
             List<DistrictPark> districtParkServed = null;
             if (m_inputMode == InputMode.INCOMING || m_inputMode == InputMode.INCOMING2)
             {
-                districtParkServed = Constraints.InputDistrictParkServiced(m_currBuildingId);
+                districtParkServed = Constraints.InputDistrictParkServiced(m_inputMode, m_currBuildingId);
             }
             if (m_inputMode == InputMode.OUTGOING || m_inputMode == InputMode.OUTGOING2)
             {
-                districtParkServed = Constraints.OutputDistrictParkServiced(m_currBuildingId);
+                districtParkServed = Constraints.OutputDistrictParkServiced(m_inputMode, m_currBuildingId);
             }
 
             void SetChecked(int i, bool ischecked)
             {
-                if (UIDistrictsDropDown.GetChecked(i) != ischecked)
+                if (m_inputMode == InputMode.INCOMING || m_inputMode == InputMode.OUTGOING && UIDistrictsDropDown.GetChecked(i) != ischecked)
                 {
                     UIDistrictsDropDown.SetChecked(i, ischecked);
+                }
+                else if (m_inputMode == InputMode.INCOMING2 || m_inputMode == InputMode.OUTGOING2 && UIDistrictsDropDown2.GetChecked(i) != ischecked)
+                {
+                    UIDistrictsDropDown2.SetChecked(i, ischecked);
                 }
             }
 
@@ -1218,13 +1278,14 @@ namespace EnhancedDistrictServices
             {
                 UIDistrictsSummary.text = string.Empty;
                 UIDistrictsDropDown.triggerButton.tooltip = string.Empty;
+                UIDistrictsDropDown2.triggerButton.tooltip = string.Empty;
                 return;
             }
 
             if (m_inputMode == InputMode.INCOMING || m_inputMode == InputMode.INCOMING2)
             {
                 var homeDistrictPark = TransferManagerInfo.GetDistrictPark(m_currBuildingId);
-                var districtParkServed = Constraints.InputDistrictParkServiced(m_currBuildingId);
+                var districtParkServed = Constraints.InputDistrictParkServiced(m_inputMode, m_currBuildingId);
 
                 var tooltipText = TransferManagerInfo.GetSupplyBuildingSourcesText(m_currBuildingId);
 
@@ -1232,6 +1293,7 @@ namespace EnhancedDistrictServices
                 {
                     UIDistrictsSummary.text = "Shipments from Districts: None";
                     UIDistrictsDropDown.triggerButton.tooltip = tooltipText;
+                    UIDistrictsDropDown2.triggerButton.tooltip = tooltipText;
                 }
                 // Note that using List::Contains is the wrong thing to do, since the districtParkServed array is 
                 // guaranteed to contain elements that refer to either 1 district or 1 park, but not both, while a building
@@ -1259,7 +1321,7 @@ namespace EnhancedDistrictServices
             if (m_inputMode == InputMode.OUTGOING || m_inputMode == InputMode.OUTGOING2)
             {
                 var homeDistrictPark = TransferManagerInfo.GetDistrictPark(m_currBuildingId);
-                var districtParkServed = Constraints.OutputDistrictParkServiced(m_currBuildingId);
+                var districtParkServed = Constraints.OutputDistrictParkServiced(m_inputMode, m_currBuildingId);
 
                 var buildingType = TransferManagerInfo.GetBuildingInputType(m_currBuildingId);
                 var tooltipText = 

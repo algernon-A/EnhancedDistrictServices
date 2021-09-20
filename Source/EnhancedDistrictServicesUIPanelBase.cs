@@ -127,13 +127,16 @@ namespace EnhancedDistrictServices
         public UIButton UIGlobalTab;
 
         public UICheckBox UIAllLocalAreasCheckBox;
+        public UICheckBox UIAllLocalAreasCheckBox2;
         public UICheckBox UIAllOutsideConnectionsCheckBox;
+        public UICheckBox UIAllOutsideConnectionsCheckBox2;
         public UILabel UISupplyReserveLabel;
         public UITextField UISupplyReserve;
         public UILabel UISupplyChainLabel;
         public UITextField UISupplyChain;
         public UILabel UIDistrictsSummary;
         public UICheckboxDropDown UIDistrictsDropDown;
+        public UICheckboxDropDown UIDistrictsDropDown2;
 
         public UICheckBox UIVehicleDefaultsCheckBox;
         public UILabel UIVehiclesSummary;
@@ -179,8 +182,12 @@ namespace EnhancedDistrictServices
 
             UIAllLocalAreasCheckBox = AttachUICheckBoxTo(this, 113, 88);
             UIAllLocalAreasCheckBox.label = AttachUILabelTo(UIAllLocalAreasCheckBox, -110, 0);
+            UIAllLocalAreasCheckBox2 = AttachUICheckBoxTo(this, 113, 88);
+            UIAllLocalAreasCheckBox2.label = AttachUILabelTo(UIAllLocalAreasCheckBox2, -110, 0);
             UIAllOutsideConnectionsCheckBox = AttachUICheckBoxTo(this, 336, 88);
             UIAllOutsideConnectionsCheckBox.label = AttachUILabelTo(UIAllOutsideConnectionsCheckBox, -173, 0);
+            UIAllOutsideConnectionsCheckBox2 = AttachUICheckBoxTo(this, 336, 88);
+            UIAllOutsideConnectionsCheckBox2.label = AttachUILabelTo(UIAllOutsideConnectionsCheckBox2, -173, 0);
             UISupplyReserveLabel = AttachUILabelTo(this, 3, 108, text: $"Supply Reserve: ");
             UISupplyReserve = AttachUITextFieldTo(this, 3, 108, 112);
             UISupplyChainLabel = AttachUILabelTo(this, 3, 128, text: $"Supply Chain: ");
@@ -191,6 +198,9 @@ namespace EnhancedDistrictServices
             UIDistrictsDropDown = AttachUICheckboxDropDownTo(this, 3, 148 + 3);
             UIDistrictsDropDown.eventDropdownOpen += UIEventDropdownOpen;
             UIDistrictsDropDown.eventDropdownClose += UIEventDropdownClose;
+            UIDistrictsDropDown2 = AttachUICheckboxDropDownTo(this, 3, 148 + 3);
+            UIDistrictsDropDown2.eventDropdownOpen += UIEventDropdownOpen;
+            UIDistrictsDropDown2.eventDropdownClose += UIEventDropdownClose;
 
             UIVehicleDefaultsCheckBox = AttachUICheckBoxTo(this, 141, 88);
             UIVehicleDefaultsCheckBox.label = AttachUILabelTo(UIVehicleDefaultsCheckBox, -138, 0);
