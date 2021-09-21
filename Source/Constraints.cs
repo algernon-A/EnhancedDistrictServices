@@ -134,23 +134,23 @@ namespace EnhancedDistrictServices
                 Logger.Log($"Constraints::LoadData: buildingName={name}, buildingId={building}, service={service}, subService={subService}, ai={ai}");
 
                 var restrictions1a = data.InputBuildingToAllLocalAreas[building];
-                SetAllInputLocalAreas(EnhancedDistrictServicesUIPanel.InputMode.INCOMING, building, restrictions1a);
+                SetAllInputLocalAreas(InputType.INCOMING, building, restrictions1a);
 
                 var restrictions1b = data.InputBuildingToAllLocalAreas2[building];
-                SetAllInputLocalAreas(EnhancedDistrictServicesUIPanel.InputMode.INCOMING2, building, restrictions1b);
+                SetAllInputLocalAreas(InputType.INCOMING2, building, restrictions1b);
 
                 var restrictions2a = data.InputBuildingToOutsideConnections[building];
-                SetAllInputOutsideConnections(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING, building, restrictions2a);
+                SetAllInputOutsideConnections(InputType.OUTGOING, building, restrictions2a);
 
                 var restrictions2b = data.InputBuildingToOutsideConnections2[building];
-                SetAllInputOutsideConnections(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2, building, restrictions2b);
+                SetAllInputOutsideConnections(InputType.OUTGOING2, building, restrictions2b);
 
                 var restrictions3a = data.InputBuildingToDistrictServiced[building];
                 if (restrictions3a != null)
                 {
                     foreach (var districtPark in restrictions3a)
                     {
-                        AddInputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode.INCOMING, building, DistrictPark.FromSerializedInt(districtPark));
+                        AddInputDistrictParkServiced(InputType.INCOMING, building, DistrictPark.FromSerializedInt(districtPark));
                     }
                 }
 
@@ -159,28 +159,28 @@ namespace EnhancedDistrictServices
                 {
                     foreach (var districtPark in restrictions3b)
                     {
-                        AddInputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode.INCOMING2, building, DistrictPark.FromSerializedInt(districtPark));
+                        AddInputDistrictParkServiced(InputType.INCOMING2, building, DistrictPark.FromSerializedInt(districtPark));
                     }
                 }
 
                 var restrictions4a = data.OutputBuildingToAllLocalAreas[building];
-                SetAllOutputLocalAreas(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING, building, restrictions4a);
+                SetAllOutputLocalAreas(InputType.OUTGOING, building, restrictions4a);
 
                 var restrictions4b = data.OutputBuildingToAllLocalAreas2[building];
-                SetAllOutputLocalAreas(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2, building, restrictions4b);
+                SetAllOutputLocalAreas(InputType.OUTGOING2, building, restrictions4b);
 
                 var restrictions5a = data.OutputBuildingToOutsideConnections[building];
-                SetAllOutputOutsideConnections(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING, building, restrictions5a);
+                SetAllOutputOutsideConnections(InputType.OUTGOING, building, restrictions5a);
 
                 var restrictions5b = data.OutputBuildingToOutsideConnections2[building];
-                SetAllOutputOutsideConnections(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2, building, restrictions5b);
+                SetAllOutputOutsideConnections(InputType.OUTGOING2, building, restrictions5b);
 
                 var restrictions6a = data.OutputBuildingToDistrictServiced[building];
                 if (restrictions6a != null)
                 {
                     foreach (var districtPark in restrictions6a)
                     {
-                        AddOutputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING, building, DistrictPark.FromSerializedInt(districtPark));
+                        AddOutputDistrictParkServiced(InputType.OUTGOING, building, DistrictPark.FromSerializedInt(districtPark));
                     }
                 }
 
@@ -189,7 +189,7 @@ namespace EnhancedDistrictServices
                 {
                     foreach (var districtPark in restrictions6b)
                     {
-                        AddOutputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2, building, DistrictPark.FromSerializedInt(districtPark));
+                        AddOutputDistrictParkServiced(InputType.OUTGOING2, building, DistrictPark.FromSerializedInt(districtPark));
                     }
                 }
                 
@@ -271,31 +271,31 @@ namespace EnhancedDistrictServices
             Logger.Log($"Constraints::CreateBuilding: buildingId={buildingId}, homeDistrict={homeDistrict}, homePark={homePark}, service={service}, subService={subService}, ai={ai}");
 
             // Set default input settings.
-            SetAllInputLocalAreas(EnhancedDistrictServicesUIPanel.InputMode.INCOMING, buildingId, true);
-            SetAllInputLocalAreas(EnhancedDistrictServicesUIPanel.InputMode.INCOMING2, buildingId, true);
-            SetAllInputOutsideConnections(EnhancedDistrictServicesUIPanel.InputMode.INCOMING, buildingId, true);
-            SetAllInputOutsideConnections(EnhancedDistrictServicesUIPanel.InputMode.INCOMING2, buildingId, true);
+            SetAllInputLocalAreas(InputType.INCOMING, buildingId, true);
+            SetAllInputLocalAreas(InputType.INCOMING2, buildingId, true);
+            SetAllInputOutsideConnections(InputType.INCOMING, buildingId, true);
+            SetAllInputOutsideConnections(InputType.INCOMING2, buildingId, true);
             m_inputBuildingToDistrictParkServiced[buildingId] = null;
             m_inputBuildingToDistrictParkServiced2[buildingId] = null;
 
             // Serve all areas if the building doesn't belong to any district or park.
-            SetAllOutputLocalAreas(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING, buildingId, homeDistrict == 0 && homePark == 0);
-            SetAllOutputLocalAreas(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2, buildingId, homeDistrict == 0 && homePark == 0);
-            SetAllOutputOutsideConnections(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING, buildingId, homeDistrict == 0 && homePark == 0);
-            SetAllOutputOutsideConnections(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2, buildingId, homeDistrict == 0 && homePark == 0);
+            SetAllOutputLocalAreas(InputType.OUTGOING, buildingId, homeDistrict == 0 && homePark == 0);
+            SetAllOutputLocalAreas(InputType.OUTGOING2, buildingId, homeDistrict == 0 && homePark == 0);
+            SetAllOutputOutsideConnections(InputType.OUTGOING, buildingId, homeDistrict == 0 && homePark == 0);
+            SetAllOutputOutsideConnections(InputType.OUTGOING2, buildingId, homeDistrict == 0 && homePark == 0);
             m_outputBuildingToDistrictParkServiced[buildingId] = null;
             m_outputBuildingToDistrictParkServiced2[buildingId] = null;
 
             if (homeDistrict != 0)
             {
-                AddOutputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING, buildingId, DistrictPark.FromDistrict(homeDistrict));
-                AddOutputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2, buildingId, DistrictPark.FromDistrict(homeDistrict));
+                AddOutputDistrictParkServiced(InputType.OUTGOING, buildingId, DistrictPark.FromDistrict(homeDistrict));
+                AddOutputDistrictParkServiced(InputType.OUTGOING2, buildingId, DistrictPark.FromDistrict(homeDistrict));
             }
 
             if (homePark != 0)
             {
-                AddOutputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING, buildingId, DistrictPark.FromPark(homePark));
-                AddOutputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2, buildingId, DistrictPark.FromPark(homePark));
+                AddOutputDistrictParkServiced(InputType.OUTGOING, buildingId, DistrictPark.FromPark(homePark));
+                AddOutputDistrictParkServiced(InputType.OUTGOING2, buildingId, DistrictPark.FromPark(homePark));
             }
         }
 
@@ -328,16 +328,16 @@ namespace EnhancedDistrictServices
         /// <summary>
         /// Called when a district or park is removed.
         /// </summary>
-        /// <param name="inputMode"></param>
+        /// <param name="inputType"></param>
         /// <param name="districtPark"></param>
-        public static void ReleaseDistrictPark(EnhancedDistrictServicesUIPanel.InputMode inputMode, DistrictPark districtPark)
+        public static void ReleaseDistrictPark(InputType inputType, DistrictPark districtPark)
         {
             Logger.Log($"Constraints::ReleaseDistrictPark: {districtPark.Name}");
 
             for (int buildingId = 0; buildingId < BuildingManager.MAX_BUILDING_COUNT; buildingId++)
             {
-                RemoveInputDistrictParkServiced(inputMode, buildingId, districtPark);
-                RemoveOutputDistrictParkServiced(inputMode, buildingId, districtPark);
+                RemoveInputDistrictParkServiced(inputType, buildingId, districtPark);
+                RemoveOutputDistrictParkServiced(inputType, buildingId, districtPark);
             }
         }
 
@@ -346,12 +346,12 @@ namespace EnhancedDistrictServices
         /// <summary>
         /// Returns true if all local areas are serviced by the building.
         /// </summary>
-        /// <param name="inputMode"></param>
+        /// <param name="inputType"></param>
         /// <param name="buildingId"></param>
         /// <returns></returns>
-        public static bool InputAllLocalAreas(EnhancedDistrictServicesUIPanel.InputMode inputMode, ushort buildingId)
+        public static bool InputAllLocalAreas(InputType inputType, ushort buildingId)
         {
-            if(inputMode == EnhancedDistrictServicesUIPanel.InputMode.INCOMING2)
+            if(inputType == InputType.INCOMING2)
             {
                 return m_inputBuildingToAllLocalAreas2[buildingId];
             }
@@ -361,12 +361,12 @@ namespace EnhancedDistrictServices
         /// <summary>
         /// Returns true if outside connections are allowed by the building.
         /// </summary>
-        /// <param name="inputMode"></param>
+        /// <param name="inputType"></param>
         /// <param name="buildingId"></param>
         /// <returns></returns>
-        public static bool InputOutsideConnections(EnhancedDistrictServicesUIPanel.InputMode inputMode, ushort buildingId)
+        public static bool InputOutsideConnections(InputType inputType, ushort buildingId)
         {
-            if(inputMode == EnhancedDistrictServicesUIPanel.InputMode.INCOMING2)
+            if(inputType == InputType.INCOMING2)
             {
                 return m_inputBuildingToOutsideConnections2[buildingId];
             }
@@ -377,12 +377,12 @@ namespace EnhancedDistrictServices
         /// Returns the list of districts or parks served by the building.
         /// TODO: Replace with IReadOnlyList.  Can't do it with older version of .NET.
         /// </summary>
-        /// <param name="inputMode"></param>
+        /// <param name="inputType"></param>
         /// <param name="buildingId"></param>
         /// <returns></returns>
-        public static List<DistrictPark> InputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode inputMode, ushort buildingId)
+        public static List<DistrictPark> InputDistrictParkServiced(InputType inputType, ushort buildingId)
         {
-            if(inputMode == EnhancedDistrictServicesUIPanel.InputMode.INCOMING2)
+            if(inputType == InputType.INCOMING2)
             {
                 return m_inputBuildingToDistrictParkServiced2[buildingId];
             }
@@ -392,12 +392,12 @@ namespace EnhancedDistrictServices
         /// <summary>
         /// Returns true if all local areas are serviced by the building.
         /// </summary>
-        /// <param name="inputMode"></param>
+        /// <param name="inputType"></param>
         /// <param name="buildingId"></param>
         /// <returns></returns>
-        public static bool OutputAllLocalAreas(EnhancedDistrictServicesUIPanel.InputMode inputMode, ushort buildingId)
+        public static bool OutputAllLocalAreas(InputType inputType, ushort buildingId)
         {
-            if(inputMode == EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2)
+            if(inputType == InputType.OUTGOING2)
             {
                 return m_outputBuildingToAllLocalAreas2[buildingId];
             }
@@ -407,12 +407,12 @@ namespace EnhancedDistrictServices
         /// <summary>
         /// Returns true if outside connections are allowed by the building.
         /// </summary>
-        /// <param name="inputMode"></param>
+        /// <param name="inputType"></param>
         /// <param name="buildingId"></param>
         /// <returns></returns>
-        public static bool OutputOutsideConnections(EnhancedDistrictServicesUIPanel.InputMode inputMode, ushort buildingId)
+        public static bool OutputOutsideConnections(InputType inputType, ushort buildingId)
         {
-            if(inputMode == EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2)
+            if(inputType == InputType.OUTGOING2)
             {
                 return m_outputBuildingToOutsideConnections2[buildingId];
             }
@@ -423,12 +423,12 @@ namespace EnhancedDistrictServices
         /// Returns the list of districts or parks served by the building.
         /// TODO: Replace with IReadOnlyList.  Can't do it with older version of .NET.
         /// </summary>
-        /// <param name="inputMode"></param>
+        /// <param name="inputType"></param>
         /// <param name="buildingId"></param>
         /// <returns></returns>
-        public static List<DistrictPark> OutputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode inputMode, ushort buildingId)
+        public static List<DistrictPark> OutputDistrictParkServiced(InputType inputType, ushort buildingId)
         {
-            if(inputMode == EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2)
+            if(inputType == InputType.OUTGOING2)
             {
                 return m_outputBuildingToDistrictParkServiced2[buildingId];
             }
@@ -497,61 +497,61 @@ namespace EnhancedDistrictServices
 
         #region Local Areas and Outside Connections methods
 
-        public static void SetAllInputLocalAreas(EnhancedDistrictServicesUIPanel.InputMode inputMode, int buildingId, bool status)
+        public static void SetAllInputLocalAreas(InputType inputType, int buildingId, bool status)
         {
             var buildingName = TransferManagerInfo.GetBuildingName(buildingId);
             Logger.LogVerbose($"Constraints::SetAllInputLocalAreas: {buildingName} ({buildingId}) => {status} ...");
 
-            if(inputMode == EnhancedDistrictServicesUIPanel.InputMode.INCOMING)
+            if(inputType == InputType.INCOMING)
             {
                 SetArrayStatus(m_inputBuildingToAllLocalAreas, buildingId, status);
             }
-            else if(inputMode == EnhancedDistrictServicesUIPanel.InputMode.INCOMING2)
+            else if(inputType == InputType.INCOMING2)
             {
                 SetArrayStatus(m_inputBuildingToAllLocalAreas2, buildingId, status);
             }
         }
 
-        public static void SetAllInputOutsideConnections(EnhancedDistrictServicesUIPanel.InputMode inputMode, int buildingId, bool status)
+        public static void SetAllInputOutsideConnections(InputType inputType, int buildingId, bool status)
         {
             var buildingName = TransferManagerInfo.GetBuildingName(buildingId);
             Logger.LogVerbose($"Constraints::SetAllInputOutsideConnections: {buildingName} ({buildingId}) => {status} ...");
 
-            if(inputMode == EnhancedDistrictServicesUIPanel.InputMode.INCOMING)
+            if(inputType == InputType.INCOMING)
             {
                 SetArrayStatus(m_inputBuildingToOutsideConnections, buildingId, status);
             }
-            else if(inputMode == EnhancedDistrictServicesUIPanel.InputMode.INCOMING2)
+            else if(inputType == InputType.INCOMING2)
             {
                 SetArrayStatus(m_inputBuildingToOutsideConnections2, buildingId, status);
             }
         }
 
-        public static void SetAllOutputLocalAreas(EnhancedDistrictServicesUIPanel.InputMode inputMode, int buildingId, bool status)
+        public static void SetAllOutputLocalAreas(InputType inputType, int buildingId, bool status)
         {
             var buildingName = TransferManagerInfo.GetBuildingName(buildingId);
             Logger.LogVerbose($"Constraints::SetAllOutputLocalAreas: {buildingName} ({buildingId}) => {status} ...");
 
-            if(inputMode == EnhancedDistrictServicesUIPanel.InputMode.OUTGOING)
+            if(inputType == InputType.OUTGOING)
             {
                 SetArrayStatus(m_outputBuildingToAllLocalAreas, buildingId, status);
             }
-            else if(inputMode == EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2)
+            else if(inputType == InputType.OUTGOING2)
             {
                 SetArrayStatus(m_outputBuildingToAllLocalAreas2, buildingId, status);
             }
         }
 
-        public static void SetAllOutputOutsideConnections(EnhancedDistrictServicesUIPanel.InputMode inputMode, int buildingId, bool status)
+        public static void SetAllOutputOutsideConnections(InputType inputType, int buildingId, bool status)
         {
             var buildingName = TransferManagerInfo.GetBuildingName(buildingId);
             Logger.LogVerbose($"Constraints::SetAllOutputOutsideConnections: {buildingName} ({buildingId}) => {status} ...");
 
-            if(inputMode == EnhancedDistrictServicesUIPanel.InputMode.OUTGOING)
+            if(inputType == InputType.OUTGOING)
             {
                 SetArrayStatus(m_outputBuildingToOutsideConnections, buildingId, status);
             }
-            else if(inputMode == EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2)
+            else if(inputType == InputType.OUTGOING2)
             {
                 SetArrayStatus(m_outputBuildingToOutsideConnections2, buildingId, status);
             }
@@ -607,17 +607,17 @@ namespace EnhancedDistrictServices
         /// <summary>
         /// Allow the specified district or park to be serviced by the specified building
         /// </summary>
-        /// <param name="inputMode"></param>
+        /// <param name="inputType"></param>
         /// <param name="buildingId"></param>
         /// <param name="districtPark"></param>
-        public static void AddInputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode inputMode, int buildingId, DistrictPark districtPark)
+        public static void AddInputDistrictParkServiced(InputType inputType, int buildingId, DistrictPark districtPark)
         {
-            if (inputMode == EnhancedDistrictServicesUIPanel.InputMode.INCOMING && AddDistrictParkServiced(m_inputBuildingToDistrictParkServiced, buildingId, districtPark))
+            if (inputType == InputType.INCOMING && AddDistrictParkServiced(m_inputBuildingToDistrictParkServiced, buildingId, districtPark))
             {
                 var buildingName = TransferManagerInfo.GetBuildingName(buildingId);
                 Logger.Log($"Constraints::AddInputDistrictParkServiced: {districtPark.Name} => {buildingName} ({buildingId}) ...");
             }
-            else if (inputMode == EnhancedDistrictServicesUIPanel.InputMode.INCOMING2 && AddDistrictParkServiced(m_inputBuildingToDistrictParkServiced2, buildingId, districtPark))
+            else if (inputType == InputType.INCOMING2 && AddDistrictParkServiced(m_inputBuildingToDistrictParkServiced2, buildingId, districtPark))
             {
                 var buildingName = TransferManagerInfo.GetBuildingName(buildingId);
                 Logger.Log($"Constraints::AddInputDistrictParkServiced: {districtPark.Name} => {buildingName} ({buildingId}) ...");
@@ -627,17 +627,17 @@ namespace EnhancedDistrictServices
         /// <summary>
         /// Allow the specified district or park to be serviced by the specified building
         /// </summary>
-        /// <param name="inputMode"></param>
+        /// <param name="inputType"></param>
         /// <param name="buildingId"></param>
         /// <param name="districtPark"></param>
-        public static void AddOutputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode inputMode, int buildingId, DistrictPark districtPark)
+        public static void AddOutputDistrictParkServiced(InputType inputType, int buildingId, DistrictPark districtPark)
         {
-            if (inputMode == EnhancedDistrictServicesUIPanel.InputMode.OUTGOING && AddDistrictParkServiced(m_outputBuildingToDistrictParkServiced, buildingId, districtPark))
+            if (inputType == InputType.OUTGOING && AddDistrictParkServiced(m_outputBuildingToDistrictParkServiced, buildingId, districtPark))
             {
                 var buildingName = TransferManagerInfo.GetBuildingName(buildingId);
                 Logger.Log($"Constraints::AddOutputDistrictParkServiced: {buildingName} ({buildingId}) => {districtPark.Name} ...");
             }
-            else if (inputMode == EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2 && AddDistrictParkServiced(m_outputBuildingToDistrictParkServiced2, buildingId, districtPark))
+            else if (inputType == InputType.OUTGOING2 && AddDistrictParkServiced(m_outputBuildingToDistrictParkServiced2, buildingId, districtPark))
             {
                 var buildingName = TransferManagerInfo.GetBuildingName(buildingId);
                 Logger.Log($"Constraints::AddOutputDistrictParkServiced: {buildingName} ({buildingId}) => {districtPark.Name} ...");
@@ -675,16 +675,16 @@ namespace EnhancedDistrictServices
         /// <summary>
         /// Disallow the specified district or park from being serviced by the specified building
         /// </summary>
-        /// <param name="inputMode"></param>
+        /// <param name="inputType"></param>
         /// <param name="buildingId"></param>
         /// <param name="districtPark"></param>
-        public static void RemoveInputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode inputMode, int buildingId, DistrictPark districtPark)
+        public static void RemoveInputDistrictParkServiced(InputType inputType, int buildingId, DistrictPark districtPark)
         {
-            if(inputMode == EnhancedDistrictServicesUIPanel.InputMode.INCOMING)
+            if(inputType == InputType.INCOMING)
             {
                 RemoveDistrictParkServiced(m_inputBuildingToDistrictParkServiced, buildingId, districtPark);
             }
-            else if(inputMode == EnhancedDistrictServicesUIPanel.InputMode.INCOMING2)
+            else if(inputType == InputType.INCOMING2)
             {
                 RemoveDistrictParkServiced(m_inputBuildingToDistrictParkServiced2, buildingId, districtPark);
             }
@@ -693,16 +693,16 @@ namespace EnhancedDistrictServices
         /// <summary>
         /// Disallow the specified district or park from being serviced by the specified building
         /// </summary>
-        /// <param name="inputMode"></param>
+        /// <param name="inputType"></param>
         /// <param name="buildingId"></param>
         /// <param name="districtPark"></param>
-        public static void RemoveOutputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode inputMode, int buildingId, DistrictPark districtPark)
+        public static void RemoveOutputDistrictParkServiced(InputType inputType, int buildingId, DistrictPark districtPark)
         {
-            if(inputMode == EnhancedDistrictServicesUIPanel.InputMode.OUTGOING)
+            if(inputType == InputType.OUTGOING)
             {
                 RemoveDistrictParkServiced(m_outputBuildingToDistrictParkServiced, buildingId, districtPark);
             }
-            else if(inputMode == EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2)
+            else if(inputType == InputType.OUTGOING2)
             {
                 RemoveDistrictParkServiced(m_outputBuildingToDistrictParkServiced2, buildingId, districtPark);
             }
