@@ -3,6 +3,7 @@ using ColossalFramework.UI;
 using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace EnhancedDistrictServices
@@ -205,10 +206,10 @@ namespace EnhancedDistrictServices
                         return;
                     }
 
-                    var inputType1 = TransferManagerInfo.GetBuildingInputType(CopyPaste.BuildingTemplate);
-                    var inputType2 = TransferManagerInfo.GetBuildingInputType(building);
+                    var inputType1 = TransferManagerInfo.GetBuildingInputTypes(CopyPaste.BuildingTemplate);
+                    var inputType2 = TransferManagerInfo.GetBuildingInputTypes(building);
 
-                    if (inputType1 != inputType2)
+                    if (!Enumerable.SequenceEqual(inputType1, inputType2))
                     {
                         Utils.DisplayMessage(
                             str1: "Enhanced District Services",
@@ -281,7 +282,7 @@ namespace EnhancedDistrictServices
         /// <returns></returns>
         private static string GetBuildingInfoText(ushort building)
         {
-            var inputType = TransferManagerInfo.GetBuildingInputType(building);
+            var inputTypes = TransferManagerInfo.GetBuildingInputTypes(building);
 
             var txtItems = new List<string>();
             txtItems.Add($"{TransferManagerInfo.GetBuildingName(building)} ({building})");
@@ -301,13 +302,14 @@ namespace EnhancedDistrictServices
                 if (TransferManagerInfo.IsDistrictServicesBuilding(building))
                 {
                     txtItems.Add("");
-                    txtItems.Add(TransferManagerInfo.GetOutputDistrictsServedText(building));
+                    txtItems.Add(TransferManagerInfo.GetOutputDistrictsServedText(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING,building));
+                    txtItems.Add(TransferManagerInfo.GetOutputDistrictsServedText(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2,building));
                 }
 
                 if (Settings.enableCustomVehicles && 
                     !VehicleManagerMod.BuildingUseDefaultVehicles[building] &&
                     VehicleManagerMod.BuildingToVehicles[building] != null &&
-                    (inputType & InputType.VEHICLES) != InputType.NONE)
+                    inputTypes.Contains(InputType.VEHICLES))
                 {
                     txtItems.Add("");
                     txtItems.Add(TransferManagerInfo.GetCustomVehiclesText(building));
@@ -321,22 +323,34 @@ namespace EnhancedDistrictServices
                 // From this point forth, we know this is a supply chain building ...
                 txtItems.Add($"Supply Reserve: {Constraints.InternalSupplyBuffer(building)}");
 
-                if ((inputType & InputType.INCOMING) != InputType.NONE)
+                if (inputTypes.Contains(InputType.INCOMING))
                 {
                     txtItems.Add("");
-                    txtItems.Add(TransferManagerInfo.GetSupplyBuildingSourcesText(building));
+                    txtItems.Add(TransferManagerInfo.GetSupplyBuildingSourcesText(InputType.INCOMING, building));
                 }
 
-                if ((inputType & InputType.OUTGOING) != InputType.NONE)
+                if (inputTypes.Contains(InputType.INCOMING2))
                 {
                     txtItems.Add("");
-                    txtItems.Add(TransferManagerInfo.GetSupplyBuildingDestinationsText(building));
+                    txtItems.Add(TransferManagerInfo.GetSupplyBuildingSourcesText(InputType.INCOMING2, building));
+                }
+
+                if (inputTypes.Contains(InputType.OUTGOING))
+                {
+                    txtItems.Add("");
+                    txtItems.Add(TransferManagerInfo.GetSupplyBuildingDestinationsText(InputType.OUTGOING, building));
+                }
+
+                if (inputTypes.Contains(InputType.OUTGOING2))
+                {
+                    txtItems.Add("");
+                    txtItems.Add(TransferManagerInfo.GetSupplyBuildingDestinationsText(InputType.OUTGOING2, building));
                 }
 
                 if (Settings.enableCustomVehicles &&
                     !VehicleManagerMod.BuildingUseDefaultVehicles[building] &&
                     VehicleManagerMod.BuildingToVehicles[building] != null &&
-                    (inputType & InputType.VEHICLES) != InputType.NONE)
+                    inputTypes.Contains(InputType.VEHICLES))
                 {
                     txtItems.Add("");
                     txtItems.Add(TransferManagerInfo.GetCustomVehiclesText(building));
