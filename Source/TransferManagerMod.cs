@@ -136,7 +136,8 @@ namespace EnhancedDistrictServices
         public delegate bool MatchFilter(
             TransferManager.TransferReason material,
             ref TransferManager.TransferOffer requestOffer, int requestPriority,
-            ref TransferManager.TransferOffer responseOffer, int responsePriority);
+            ref TransferManager.TransferOffer responseOffer, int responsePriority,
+            InputType inputType, InputType inputType2);
 
         /// <summary>
         /// Matches all offers of the given material, if supported.  Returns true if this method did attempt to match 
@@ -170,7 +171,8 @@ namespace EnhancedDistrictServices
                         requestCount: m_incomingCount, requestOffers: m_incomingOffers,
                         requestPriorityMax: 7, requestPriorityMin: 1,
                         responseCount: m_outgoingCount, responseOffers: m_outgoingOffers,
-                        responsePriorityMax: 7, responsePriorityMin: 1,
+                        responsePriorityMax: 7, responsePriorityMin: 1, 
+                        InputType.INCOMING, InputType.OUTGOING,
                         matchFilter: IsValidDistrictOffer);
 
                     Clear(material);
@@ -184,6 +186,7 @@ namespace EnhancedDistrictServices
                         requestPriorityMax: 7, requestPriorityMin: 1,
                         responseCount: m_outgoingCount, responseOffers: m_outgoingOffers,
                         responsePriorityMax: 7, responsePriorityMin: 1,
+                        InputType.INCOMING, InputType.OUTGOING,
                         matchFilter: IsValidSupplyChainOffer);
 
                     MatchOffersClosest(
@@ -192,6 +195,7 @@ namespace EnhancedDistrictServices
                         requestPriorityMax: 0, requestPriorityMin: 0,
                         responseCount: m_outgoingCount, responseOffers: m_outgoingOffers,
                         responsePriorityMax: 7, responsePriorityMin: 1,
+                        InputType.INCOMING, InputType.OUTGOING,
                         matchFilter: IsValidLowPriorityOffer);
 
                     Clear(material);
@@ -205,6 +209,7 @@ namespace EnhancedDistrictServices
                         requestPriorityMax: 7, requestPriorityMin: 1,
                         responseCount: m_incomingCount, responseOffers: m_incomingOffers,
                         responsePriorityMax: 7, responsePriorityMin: 1,
+                        InputType.INCOMING, InputType.OUTGOING,
                         matchFilter: IsValidDistrictOffer);
 
                     Clear(material);
@@ -219,6 +224,7 @@ namespace EnhancedDistrictServices
                         requestPriorityMax: 7, requestPriorityMin: 1,
                         responseCount: m_outgoingCount, responseOffers: m_outgoingOffers,
                         responsePriorityMax: 7, responsePriorityMin: 1,
+                        InputType.INCOMING, InputType.OUTGOING,
                         matchFilter: IsValidSupplyChainOffer);
 
                     MatchOffersClosest(
@@ -227,6 +233,7 @@ namespace EnhancedDistrictServices
                         requestPriorityMax: 7, requestPriorityMin: 1,
                         responseCount: m_outgoingCount, responseOffers: m_outgoingOffers,
                         responsePriorityMax: 7, responsePriorityMin: 0,
+                        InputType.INCOMING, InputType.OUTGOING,
                         matchFilter: IsValidLowPriorityOffer);
 
                     // Now finally try and match to outside offers, as well as match using extra supply.
@@ -236,6 +243,37 @@ namespace EnhancedDistrictServices
                         requestPriorityMax: 0, requestPriorityMin: 0,
                         responseCount: m_outgoingCount, responseOffers: m_outgoingOffers,
                         responsePriorityMax: 7, responsePriorityMin: 0,
+                        InputType.INCOMING, InputType.OUTGOING,
+                        matchFilter: IsValidLowPriorityOffer);
+
+
+                    // First try to match using supply chain rules.
+                    MatchOffersClosest(
+                        material,
+                        requestCount: m_incomingCount, requestOffers: m_incomingOffers,
+                        requestPriorityMax: 7, requestPriorityMin: 1,
+                        responseCount: m_outgoingCount, responseOffers: m_outgoingOffers,
+                        responsePriorityMax: 7, responsePriorityMin: 1,
+                        InputType.INCOMING2, InputType.OUTGOING2,
+                        matchFilter: IsValidSupplyChainOffer);
+
+                    MatchOffersClosest(
+                        material,
+                        requestCount: m_incomingCount, requestOffers: m_incomingOffers,
+                        requestPriorityMax: 7, requestPriorityMin: 1,
+                        responseCount: m_outgoingCount, responseOffers: m_outgoingOffers,
+                        responsePriorityMax: 7, responsePriorityMin: 0,
+                        InputType.INCOMING2, InputType.OUTGOING2,
+                        matchFilter: IsValidLowPriorityOffer);
+
+                    // Now finally try and match to outside offers, as well as match using extra supply.
+                    MatchOffersClosest(
+                        material,
+                        requestCount: m_incomingCount, requestOffers: m_incomingOffers,
+                        requestPriorityMax: 0, requestPriorityMin: 0,
+                        responseCount: m_outgoingCount, responseOffers: m_outgoingOffers,
+                        responsePriorityMax: 7, responsePriorityMin: 0,
+                        InputType.INCOMING2, InputType.OUTGOING2,
                         matchFilter: IsValidLowPriorityOffer);
 
                     Clear(material);
@@ -266,7 +304,8 @@ namespace EnhancedDistrictServices
             ushort[] requestCount, TransferManager.TransferOffer[] requestOffers, 
             int requestPriorityMax, int requestPriorityMin,
             ushort[] responseCount, TransferManager.TransferOffer[] responseOffers,
-            int responsePriorityMax, int responsePriorityMin,
+            int responsePriorityMax, int responsePriorityMin, 
+            InputType inputType, InputType inputType2,
             MatchFilter matchFilter)
         {
             int matchesMissed = 0;
@@ -357,7 +396,8 @@ namespace EnhancedDistrictServices
                                 if (!matchFilter(
                                     material,
                                     ref requestOffer, requestPriority,
-                                    ref responseOffer, responsePriority))
+                                    ref responseOffer, responsePriority, 
+                                    inputType, inputType2))
                                 {
                                     continue;
                                 }
@@ -587,7 +627,8 @@ namespace EnhancedDistrictServices
         private static bool IsValidDistrictOffer(
             TransferManager.TransferReason material, 
             ref TransferManager.TransferOffer requestOffer, int requestPriority,
-            ref TransferManager.TransferOffer responseOffer, int responsePriority)
+            ref TransferManager.TransferOffer responseOffer, int responsePriority, 
+            InputType inputType, InputType inputType2)
         {
             var requestBuilding = TransferManagerInfo.GetHomeBuilding(ref requestOffer);
             var responseBuilding = TransferManagerInfo.GetHomeBuilding(ref responseOffer);
@@ -607,7 +648,7 @@ namespace EnhancedDistrictServices
                 return false;
             }
 
-            if (Constraints.OutputAllLocalAreas(responseBuilding))
+            if (Constraints.OutputAllLocalAreas(inputType2, responseBuilding))
             {
                 Logger.LogMaterial(
                     $"TransferManager::IsValidDistrictOffer: {Utils.ToString(ref responseOffer, material)}, serves all local areas",
@@ -618,7 +659,7 @@ namespace EnhancedDistrictServices
             // The call to TransferManagerInfo.GetDistrict applies to offers that are come from buildings, service 
             // vehicles, citizens, AND segments.  The latter needs to be considered for road maintenance.
             var requestDistrictPark = TransferManagerInfo.GetDistrictPark(material, ref requestOffer);
-            var responseDistrictParksServed = Constraints.OutputDistrictParkServiced(responseBuilding);
+            var responseDistrictParksServed = Constraints.OutputDistrictParkServiced(inputType2, responseBuilding);
             if (requestDistrictPark.IsServedBy(responseDistrictParksServed))
             {
                 Logger.LogMaterial(
@@ -640,7 +681,8 @@ namespace EnhancedDistrictServices
         private static bool IsValidSupplyChainOffer(
             TransferManager.TransferReason material,
             ref TransferManager.TransferOffer requestOffer, int requestPriority,
-            ref TransferManager.TransferOffer responseOffer, int responsePriority)
+            ref TransferManager.TransferOffer responseOffer, int responsePriority, 
+            InputType inputType, InputType inputType2)
         {
             var requestBuilding = TransferManagerInfo.GetHomeBuilding(ref requestOffer);
             var responseBuilding = TransferManagerInfo.GetHomeBuilding(ref responseOffer);
@@ -681,9 +723,9 @@ namespace EnhancedDistrictServices
             var responseDistrictPark = TransferManagerInfo.GetDistrictPark(material, ref responseOffer);
 
             // If the request constrains the districts that it can accept orders from ...
-            if (!Constraints.InputAllLocalAreas(requestBuilding))
+            if (!Constraints.InputAllLocalAreas(inputType, requestBuilding))
             {
-                var requestDistrictParksServed = Constraints.InputDistrictParkServiced(requestBuilding);
+                var requestDistrictParksServed = Constraints.InputDistrictParkServiced(inputType, requestBuilding);
                 if (!responseDistrictPark.IsServedBy(requestDistrictParksServed))
                 {
                     Logger.LogMaterial(
@@ -693,7 +735,7 @@ namespace EnhancedDistrictServices
                 }
             }
 
-            if (!Constraints.InputOutsideConnections(requestBuilding) && TransferManagerInfo.IsOutsideOffer(ref responseOffer))
+            if (!Constraints.InputOutsideConnections(inputType, requestBuilding) && TransferManagerInfo.IsOutsideOffer(ref responseOffer))
             {
                 Logger.LogMaterial(
                     $"TransferManager::IsValidSupplyChainOffer: {Utils.ToString(ref responseOffer, material)}, request is constrained not to accept outside offers!",
@@ -701,7 +743,7 @@ namespace EnhancedDistrictServices
                 return false;
             }
 
-            if (Constraints.OutputAllLocalAreas(responseBuilding))
+            if (Constraints.OutputAllLocalAreas(inputType2, responseBuilding))
             {
                 Logger.LogMaterial(
                     $"TransferManager::IsValidSupplyChainOffer: {Utils.ToString(ref responseOffer, material)}, serves all local areas",
@@ -712,7 +754,7 @@ namespace EnhancedDistrictServices
             {
                 // The call to TransferManagerInfo.GetDistrict applies to offers that are come from buildings, service 
                 // vehicles, citizens, AND segments.  The latter needs to be considered for road maintenance.
-                var responseDistrictParksServed = Constraints.OutputDistrictParkServiced(responseBuilding);
+                var responseDistrictParksServed = Constraints.OutputDistrictParkServiced(inputType2, responseBuilding);
                 if (requestDistrictPark.IsServedBy(responseDistrictParksServed))
                 {
                     Logger.LogMaterial(
@@ -735,7 +777,8 @@ namespace EnhancedDistrictServices
         private static bool IsValidLowPriorityOffer(
             TransferManager.TransferReason material,
             ref TransferManager.TransferOffer requestOffer, int requestPriority,
-            ref TransferManager.TransferOffer responseOffer, int responsePriority)
+            ref TransferManager.TransferOffer responseOffer, int responsePriority,
+            InputType inputType, InputType inputType2)
         {
             var requestBuilding = TransferManagerInfo.GetHomeBuilding(ref requestOffer);
             var responseBuilding = TransferManagerInfo.GetHomeBuilding(ref responseOffer);
@@ -768,9 +811,9 @@ namespace EnhancedDistrictServices
                 }
 
                 // Only allow if there are no restrictions on the request, OR if recycling center resides in an allowed district.
-                var requestDistrictParksServed = Constraints.InputDistrictParkServiced(requestBuilding);
+                var requestDistrictParksServed = Constraints.InputDistrictParkServiced(inputType, requestBuilding);
                 var responseDistrictPark = TransferManagerInfo.GetDistrictPark(responseBuilding);
-                if (Constraints.InputAllLocalAreas(requestBuilding) || responseDistrictPark.IsServedBy(requestDistrictParksServed))
+                if (Constraints.InputAllLocalAreas(inputType, requestBuilding) || responseDistrictPark.IsServedBy(requestDistrictParksServed))
                 {
                     Logger.LogMaterial(
                         $"TransferManager::IsValidLowPriorityOffer: {Utils.ToString(ref responseOffer, material)}, allow recycling centers",
@@ -799,7 +842,7 @@ namespace EnhancedDistrictServices
                         material);
                     return true;
                 }
-                else if (Constraints.OutputOutsideConnections(responseBuilding))
+                else if (Constraints.OutputOutsideConnections(inputType2, responseBuilding))
                 {
                     Logger.LogMaterial(
                         $"TransferManager::IsValidLowPriorityOffer: {Utils.ToString(ref responseOffer, material)}, matched inside to outside offer",
@@ -819,7 +862,7 @@ namespace EnhancedDistrictServices
             if (TransferManagerInfo.IsOutsideBuilding(responseBuilding))
             {
                 // Don't be so aggressive in trying to serve low priority orders with outside connections.
-                if (requestPriority > 1 && Constraints.InputOutsideConnections(requestBuilding))
+                if (requestPriority > 1 && Constraints.InputOutsideConnections(inputType, requestBuilding))
                 {
                     Logger.LogMaterial(
                         $"TransferManager::IsValidLowPriorityOffer: {Utils.ToString(ref responseOffer, material)}, matched outside to inside offer",
@@ -830,7 +873,7 @@ namespace EnhancedDistrictServices
             else if (TransferManagerInfo.GetSupplyBuildingAmount(responseBuilding) > Constraints.InternalSupplyBuffer(responseBuilding))
             {
                 // Only allow if the request building allows all incoming shipments
-                if (Constraints.InputAllLocalAreas(requestBuilding))
+                if (Constraints.InputAllLocalAreas(inputType, requestBuilding))
                 {
                     Logger.LogMaterial(
                         $"TransferManager::IsValidLowPriorityOffer: {Utils.ToString(ref responseOffer, material)}, internal supply buffer, supply amount={TransferManagerInfo.GetSupplyBuildingAmount(responseBuilding)}, supply buffer={Constraints.InternalSupplyBuffer(responseBuilding)}",
