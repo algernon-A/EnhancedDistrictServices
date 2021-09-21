@@ -62,13 +62,10 @@ namespace EnhancedDistrictServices
 
             // The only building type for which we will not show an outgoing tab is coal and heating power plants.
 
-            var my_building = BuildingManager.instance.m_buildings.m_buffer[building];
             var info = BuildingManager.instance.m_buildings.m_buffer[building].Info;
             if (TransferManagerInfo.IsDistrictServicesBuilding(building))
             {
-                if (info?.GetService() == ItemClass.Service.PublicTransport && info?.GetSubService() == ItemClass.SubService.PublicTransportPost && info?.GetAI() is PostOfficeAI || 
-                    ((info?.GetAI() is HelicopterDepotAI && info?.GetService() == ItemClass.Service.PoliceDepartment) || info.GetAI().GetType().Name.Equals("NewPoliceStationAI")) && (my_building.m_flags & Building.Flags.Downgrading) == 0 ||
-                    info?.GetAI() is LandfillSiteAI landfillSiteAI && landfillSiteAI.m_info.name.Contains("Recycling Center"))
+                if (IsTwoInputBuilding(building))
                 {
                     inputTypes.Add(InputType.OUTGOING);
                     inputTypes.Add(InputType.OUTGOING2);
@@ -90,8 +87,7 @@ namespace EnhancedDistrictServices
             if (Settings.enableIndustriesControl && TransferManagerInfo.IsSupplyChainBuilding(building))
             {
                 inputTypes.Add(InputType.SUPPLY_CHAIN);
-                if (info?.GetService() == ItemClass.Service.PublicTransport && info?.GetSubService() == ItemClass.SubService.PublicTransportPost && info?.GetAI() is PostOfficeAI || 
-                    ((info?.GetAI() is HelicopterDepotAI && info?.GetService() == ItemClass.Service.PoliceDepartment) || info.GetAI().GetType().Name.Equals("NewPoliceStationAI")) && (my_building.m_flags & Building.Flags.Downgrading) == 0)
+                if (IsTwoInputBuilding(building))
                 {
                     inputTypes.Add(InputType.INCOMING);
                     inputTypes.Add(InputType.INCOMING2);
@@ -902,6 +898,12 @@ namespace EnhancedDistrictServices
             return false;
         }
 
+        /// <summary>
+        /// Returns true if there is a valid supply chain link between the source and the destination.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="destination"></param>
+        /// <returns></returns>
         public static bool IsValidSupplyChainLink(ushort source, ushort destination)
         {
             var sourceMaterial = GetSupplyBuildingOutputMaterial(source);
@@ -1061,6 +1063,27 @@ namespace EnhancedDistrictServices
         public static bool IsOutsideOffer(ref TransferManager.TransferOffer offer)
         {
             return IsOutsideBuilding(GetHomeBuilding(ref offer));
+        }
+
+        /// <summary>
+        /// Returns true if the building has two inputsTypes.
+        /// </summary>
+        /// <param name="building"></param>
+        /// <returns></returns>
+        public static bool IsTwoInputBuilding(int building)
+        {
+            var my_building = BuildingManager.instance.m_buildings.m_buffer[building];
+            var info = BuildingManager.instance.m_buildings.m_buffer[building].Info;
+            if (info?.GetService() == ItemClass.Service.PublicTransport && info?.GetSubService() == ItemClass.SubService.PublicTransportPost && info?.GetAI() is PostOfficeAI || 
+                info?.GetService() == ItemClass.Service.PoliceDepartment && info.GetAI().GetType().Name.Equals("NewPoliceStationAI") && (my_building.m_flags & Building.Flags.Downgrading) == 0 ||
+                info?.GetAI() is LandfillSiteAI landfillSiteAI && landfillSiteAI.m_info.name.Contains("Recycling Center"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
