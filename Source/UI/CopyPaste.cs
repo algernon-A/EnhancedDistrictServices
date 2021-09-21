@@ -12,49 +12,49 @@ namespace EnhancedDistrictServices
 
             Constraints.SetInternalSupplyReserve(building, Constraints.InternalSupplyBuffer(BuildingTemplate));
 
-            Constraints.SetAllInputLocalAreas(EnhancedDistrictServicesUIPanel.InputMode.INCOMING, building, Constraints.InputAllLocalAreas(EnhancedDistrictServicesUIPanel.InputMode.INCOMING, BuildingTemplate));
-            Constraints.SetAllInputLocalAreas(EnhancedDistrictServicesUIPanel.InputMode.INCOMING2, building, Constraints.InputAllLocalAreas(EnhancedDistrictServicesUIPanel.InputMode.INCOMING2, BuildingTemplate));
-            Constraints.SetAllOutputLocalAreas(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING, building, Constraints.OutputAllLocalAreas(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING, BuildingTemplate));
-            Constraints.SetAllOutputLocalAreas(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2, building, Constraints.OutputAllLocalAreas(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2, BuildingTemplate));
+            Constraints.SetAllInputLocalAreas(InputType.INCOMING, building, Constraints.InputAllLocalAreas(InputType.INCOMING, BuildingTemplate));
+            Constraints.SetAllInputLocalAreas(InputType.INCOMING2, building, Constraints.InputAllLocalAreas(InputType.INCOMING2, BuildingTemplate));
+            Constraints.SetAllOutputLocalAreas(InputType.OUTGOING, building, Constraints.OutputAllLocalAreas(InputType.OUTGOING, BuildingTemplate));
+            Constraints.SetAllOutputLocalAreas(InputType.OUTGOING2, building, Constraints.OutputAllLocalAreas(InputType.OUTGOING2, BuildingTemplate));
 
-            Constraints.SetAllInputOutsideConnections(EnhancedDistrictServicesUIPanel.InputMode.INCOMING, building, Constraints.InputOutsideConnections(EnhancedDistrictServicesUIPanel.InputMode.INCOMING, BuildingTemplate));
-            Constraints.SetAllInputOutsideConnections(EnhancedDistrictServicesUIPanel.InputMode.INCOMING2, building, Constraints.InputOutsideConnections(EnhancedDistrictServicesUIPanel.InputMode.INCOMING2, BuildingTemplate));
-            Constraints.SetAllOutputOutsideConnections(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING, building, Constraints.OutputOutsideConnections(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING, BuildingTemplate));
-            Constraints.SetAllOutputOutsideConnections(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2, building, Constraints.OutputOutsideConnections(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2, BuildingTemplate));
+            Constraints.SetAllInputOutsideConnections(InputType.INCOMING, building, Constraints.InputOutsideConnections(InputType.INCOMING, BuildingTemplate));
+            Constraints.SetAllInputOutsideConnections(InputType.INCOMING2, building, Constraints.InputOutsideConnections(InputType.INCOMING2, BuildingTemplate));
+            Constraints.SetAllOutputOutsideConnections(InputType.OUTGOING, building, Constraints.OutputOutsideConnections(InputType.OUTGOING, BuildingTemplate));
+            Constraints.SetAllOutputOutsideConnections(InputType.OUTGOING2, building, Constraints.OutputOutsideConnections(InputType.OUTGOING2, BuildingTemplate));
 
-            var inputDistrictsServed = Constraints.InputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode.INCOMING, BuildingTemplate);
+            var inputDistrictsServed = Constraints.InputDistrictParkServiced(InputType.INCOMING, BuildingTemplate);
             if (inputDistrictsServed != null)
             {
                 foreach (var districtPark in inputDistrictsServed)
                 {
-                    Constraints.AddInputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode.INCOMING, building, districtPark);
+                    Constraints.AddInputDistrictParkServiced(InputType.INCOMING, building, districtPark);
                 }
             }
 
-            var inputDistrictsServed2 = Constraints.InputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode.INCOMING2, BuildingTemplate);
+            var inputDistrictsServed2 = Constraints.InputDistrictParkServiced(InputType.INCOMING2, BuildingTemplate);
             if (inputDistrictsServed2 != null)
             {
                 foreach (var districtPark in inputDistrictsServed2)
                 {
-                    Constraints.AddInputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode.INCOMING2, building, districtPark);
+                    Constraints.AddInputDistrictParkServiced(InputType.INCOMING2, building, districtPark);
                 }
             }
 
-            var outputDistrictsServed = Constraints.OutputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING, BuildingTemplate);
+            var outputDistrictsServed = Constraints.OutputDistrictParkServiced(InputType.OUTGOING, BuildingTemplate);
             if (outputDistrictsServed != null)
             {
                 foreach (var districtPark in outputDistrictsServed)
                 {
-                    Constraints.AddOutputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING, building, districtPark);
+                    Constraints.AddOutputDistrictParkServiced(InputType.OUTGOING, building, districtPark);
                 }
             }
 
-            var outputDistrictsServed2 = Constraints.OutputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2, BuildingTemplate);
+            var outputDistrictsServed2 = Constraints.OutputDistrictParkServiced(InputType.OUTGOING2, BuildingTemplate);
             if (outputDistrictsServed2 != null)
             {
                 foreach (var districtPark in outputDistrictsServed2)
                 {
-                    Constraints.AddOutputDistrictParkServiced(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2, building, districtPark);
+                    Constraints.AddOutputDistrictParkServiced(InputType.OUTGOING2, building, districtPark);
                 }
             }
 

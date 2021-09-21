@@ -302,8 +302,8 @@ namespace EnhancedDistrictServices
                 if (TransferManagerInfo.IsDistrictServicesBuilding(building))
                 {
                     txtItems.Add("");
-                    txtItems.Add(TransferManagerInfo.GetOutputDistrictsServedText(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING,building));
-                    txtItems.Add(TransferManagerInfo.GetOutputDistrictsServedText(EnhancedDistrictServicesUIPanel.InputMode.OUTGOING2,building));
+                    txtItems.Add(TransferManagerInfo.GetOutputDistrictsServedText(InputType.OUTGOING,building));
+                    txtItems.Add(TransferManagerInfo.GetOutputDistrictsServedText(InputType.OUTGOING2,building));
                 }
 
                 if (Settings.enableCustomVehicles && 

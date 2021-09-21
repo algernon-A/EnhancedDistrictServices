@@ -330,14 +330,16 @@ namespace EnhancedDistrictServices
         /// </summary>
         /// <param name="inputType"></param>
         /// <param name="districtPark"></param>
-        public static void ReleaseDistrictPark(InputType inputType, DistrictPark districtPark)
+        public static void ReleaseDistrictPark(DistrictPark districtPark)
         {
             Logger.Log($"Constraints::ReleaseDistrictPark: {districtPark.Name}");
 
             for (int buildingId = 0; buildingId < BuildingManager.MAX_BUILDING_COUNT; buildingId++)
             {
-                RemoveInputDistrictParkServiced(inputType, buildingId, districtPark);
-                RemoveOutputDistrictParkServiced(inputType, buildingId, districtPark);
+                RemoveInputDistrictParkServiced(InputType.INCOMING, buildingId, districtPark);
+                RemoveInputDistrictParkServiced(InputType.INCOMING2, buildingId, districtPark);
+                RemoveOutputDistrictParkServiced(InputType.OUTGOING, buildingId, districtPark);
+                RemoveOutputDistrictParkServiced(InputType.OUTGOING2, buildingId, districtPark);
             }
         }
 

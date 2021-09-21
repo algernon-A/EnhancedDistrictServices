@@ -39,7 +39,7 @@ namespace EnhancedDistrictServices
                 var buildingId = m_taxiBuildings[i];
                 if (BuildingManager.instance.m_buildings.m_buffer[buildingId].Info?.GetSubService() == ItemClass.SubService.PublicTransportTaxi)
                 {
-                    var districtParkServed = Constraints.OutputDistrictParkServiced((ushort)buildingId);
+                    var districtParkServed = Constraints.OutputDistrictParkServiced(InputType.OUTGOING, (ushort)buildingId);
                     if (startDistrictPark.IsServedBy(districtParkServed) && endDistrictPark.IsServedBy(districtParkServed))
                     {
                         return true;
