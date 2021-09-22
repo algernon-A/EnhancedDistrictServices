@@ -890,7 +890,7 @@ namespace EnhancedDistrictServices
                         ShowComponent(UIAllOutsideConnectionsCheckBox, false);
                     }
 
-                    if (TransferManagerInfo.IsSupplyChainBuilding(m_currBuildingId))
+                    if (TransferManagerInfo.IsSupplyChainBuilding(m_currBuildingId) && !TransferManagerInfo.IsTwoOutputBuilding(m_currBuildingId))
                     {
                         AddTabContainerRow();
                         AddElementToTabContainerRow(UISupplyReserve);
@@ -912,6 +912,9 @@ namespace EnhancedDistrictServices
                     AddElementToTabContainerRow(UIDistrictsSummary);
                     AddElementToTabContainerRow(UIDistrictsDropDown);
 
+                    ShowComponent(UIAllLocalAreasCheckBox2, false);
+                    ShowComponent(UIAllOutsideConnectionsCheckBox2, false);
+                    ShowComponent(UIDistrictsDropDown2, false);
                     ShowComponent(UIVehicleDefaultsCheckBox, false);
                     ShowComponent(UIVehiclesSummary, false);
                     ShowComponent(UIVehiclesDropDown, false);
@@ -929,14 +932,25 @@ namespace EnhancedDistrictServices
                     ShowComponent(UISupplyReserve, false);
                     ShowComponent(UISupplyReserveLabel, false);
 
-                    AddTabContainerRow();
-                    AddElementToTabContainerRow(UISupplyChain);
-                    AddElementToTabContainerRow(UISupplyChainLabel);
+                    if (TransferManagerInfo.IsSupplyChainBuilding(m_currBuildingId) && !TransferManagerInfo.IsTwoInputBuilding(m_currBuildingId))
+                    {
+                        AddTabContainerRow();
+                        AddElementToTabContainerRow(UISupplyChain);
+                        AddElementToTabContainerRow(UISupplyChainLabel);
+                    }
+                    else
+                    {
+                        ShowComponent(UISupplyChain, false);
+                        ShowComponent(UISupplyChainLabel, false);
+                    }
 
                     AddTabContainerRow();
                     AddElementToTabContainerRow(UIDistrictsSummary);
                     AddElementToTabContainerRow(UIDistrictsDropDown);
 
+                    ShowComponent(UIAllLocalAreasCheckBox2, false);
+                    ShowComponent(UIAllOutsideConnectionsCheckBox2, false);
+                    ShowComponent(UIDistrictsDropDown2, false);
                     ShowComponent(UIVehicleDefaultsCheckBox, false);
                     ShowComponent(UIVehiclesSummary, false);
                     ShowComponent(UIVehiclesDropDown, false);
@@ -949,13 +963,16 @@ namespace EnhancedDistrictServices
 
                 case InputMode.VEHICLES:
                     ShowComponent(UIAllLocalAreasCheckBox, false);
+                    ShowComponent(UIAllLocalAreasCheckBox2, false);
                     ShowComponent(UIAllOutsideConnectionsCheckBox, false);
+                    ShowComponent(UIAllOutsideConnectionsCheckBox2, false);
                     ShowComponent(UISupplyReserve, false);
                     ShowComponent(UISupplyReserveLabel, false);
                     ShowComponent(UISupplyChain, false);
                     ShowComponent(UISupplyChainLabel, false);
                     ShowComponent(UIDistrictsSummary, false);
                     ShowComponent(UIDistrictsDropDown, false);
+                    ShowComponent(UIDistrictsDropDown2, false);
 
                     AddTabContainerRow();
                     AddElementToTabContainerRow(UIVehicleDefaultsCheckBox);
@@ -973,13 +990,16 @@ namespace EnhancedDistrictServices
 
                 case InputMode.GLOBAL:
                     ShowComponent(UIAllLocalAreasCheckBox, false);
+                    ShowComponent(UIAllLocalAreasCheckBox2, false);
                     ShowComponent(UIAllOutsideConnectionsCheckBox, false);
+                    ShowComponent(UIAllOutsideConnectionsCheckBox2, false);
                     ShowComponent(UISupplyReserve, false);
                     ShowComponent(UISupplyReserveLabel, false);
                     ShowComponent(UISupplyChain, false);
                     ShowComponent(UISupplyChainLabel, false);
                     ShowComponent(UIDistrictsSummary, false);
                     ShowComponent(UIDistrictsDropDown, false);
+                    ShowComponent(UIDistrictsDropDown2, false);
                     ShowComponent(UIVehicleDefaultsCheckBox, false);
                     ShowComponent(UIVehiclesSummary, false);
                     ShowComponent(UIVehiclesDropDown, false);
@@ -1006,7 +1026,7 @@ namespace EnhancedDistrictServices
                         ShowComponent(UIAllOutsideConnectionsCheckBox2, false);
                     }
 
-                    if (TransferManagerInfo.IsSupplyChainBuilding(m_currBuildingId))
+                    if (TransferManagerInfo.IsSupplyChainBuilding(m_currBuildingId) && TransferManagerInfo.IsTwoOutputBuilding(m_currBuildingId))
                     {
                         AddTabContainerRow();
                         AddElementToTabContainerRow(UISupplyReserve);
@@ -1028,6 +1048,9 @@ namespace EnhancedDistrictServices
                     AddElementToTabContainerRow(UIDistrictsSummary);
                     AddElementToTabContainerRow(UIDistrictsDropDown2);
 
+                    ShowComponent(UIAllLocalAreasCheckBox, false);
+                    ShowComponent(UIAllOutsideConnectionsCheckBox, false);
+                    ShowComponent(UIDistrictsDropDown, false);
                     ShowComponent(UIVehicleDefaultsCheckBox, false);
                     ShowComponent(UIVehiclesSummary, false);
                     ShowComponent(UIVehiclesDropDown, false);
@@ -1042,17 +1065,28 @@ namespace EnhancedDistrictServices
                     AddElementToTabContainerRow(UIAllLocalAreasCheckBox2);
                     AddElementToTabContainerRow(UIAllOutsideConnectionsCheckBox2);
 
+                    if (TransferManagerInfo.IsSupplyChainBuilding(m_currBuildingId) && TransferManagerInfo.IsTwoInputBuilding(m_currBuildingId))
+                    {
+                        AddTabContainerRow();
+                        AddElementToTabContainerRow(UISupplyChain);
+                        AddElementToTabContainerRow(UISupplyChainLabel);
+                    }
+                    else
+                    {
+                        ShowComponent(UISupplyChain, false);
+                        ShowComponent(UISupplyChainLabel, false);
+                    }
+
                     ShowComponent(UISupplyReserve, false);
                     ShowComponent(UISupplyReserveLabel, false);
-
-                    AddTabContainerRow();
-                    AddElementToTabContainerRow(UISupplyChain);
-                    AddElementToTabContainerRow(UISupplyChainLabel);
 
                     AddTabContainerRow();
                     AddElementToTabContainerRow(UIDistrictsSummary);
                     AddElementToTabContainerRow(UIDistrictsDropDown2);
 
+                    ShowComponent(UIAllLocalAreasCheckBox, false);
+                    ShowComponent(UIAllOutsideConnectionsCheckBox, false);
+                    ShowComponent(UIDistrictsDropDown, false);
                     ShowComponent(UIVehicleDefaultsCheckBox, false);
                     ShowComponent(UIVehiclesSummary, false);
                     ShowComponent(UIVehiclesDropDown, false);

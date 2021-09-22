@@ -157,13 +157,13 @@ namespace EnhancedDistrictServices
 
             name = GetType().Name;
             backgroundSprite = "MenuPanel2";
-            size = new Vector2(m_componentWidth + 2 * m_componentPadding, 200);
+            size = new Vector2((m_componentWidth + 200) + 2 * m_componentPadding, 200);
 
             UITitle = AttachUILabelTo(this, 3, 3, height: 25);
             UITitle.textAlignment = UIHorizontalAlignment.Center;
             UITitle.textScale = 1.0f;
 
-            UICloseButton = AttachUIButtonTo(this, 372, 0);
+            UICloseButton = AttachUIButtonTo(this, 572, 0);
 
             UIBuildingIdLabel = AttachUILabelTo(this, 3, 28, text: $"Building Id: ");
             UIBuildingId = AttachUITextFieldTo(this, 3, 28, 78);

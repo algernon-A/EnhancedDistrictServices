@@ -65,7 +65,7 @@ namespace EnhancedDistrictServices
             var info = BuildingManager.instance.m_buildings.m_buffer[building].Info;
             if (TransferManagerInfo.IsDistrictServicesBuilding(building))
             {
-                if (IsTwoInputBuilding(building))
+                if (IsTwoOutputBuilding(building))
                 {
                     inputTypes.Add(InputType.OUTGOING);
                     inputTypes.Add(InputType.OUTGOING2);
@@ -92,7 +92,7 @@ namespace EnhancedDistrictServices
                     inputTypes.Add(InputType.INCOMING);
                     inputTypes.Add(InputType.INCOMING2);
                 }
-                else if (!(info?.GetAI() is ExtractingFacilityAI || info?.GetAI() is FishFarmAI || info?.GetAI() is FishingHarborAI))
+                else if (!(info?.GetAI() is ExtractingFacilityAI || info?.GetAI() is FishFarmAI || info?.GetAI() is FishingHarborAI || info?.GetAI() is LandfillSiteAI landfillSiteAI && landfillSiteAI.m_info.name.Contains("Recycling Center")))
                 {
                     inputTypes.Add(InputType.INCOMING);
                 }
@@ -1068,16 +1068,28 @@ namespace EnhancedDistrictServices
         }
 
         /// <summary>
-        /// Returns true if the building has two inputsTypes.
+        /// Returns true if the building has two inputs.
         /// </summary>
         /// <param name="building"></param>
         /// <returns></returns>
         public static bool IsTwoInputBuilding(int building)
         {
             var my_building = BuildingManager.instance.m_buildings.m_buffer[building];
+            var info = my_building.Info;
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the building has two outputs.
+        /// </summary>
+        /// <param name="building"></param>
+        /// <returns></returns>
+        public static bool IsTwoOutputBuilding(int building)
+        {
+            var my_building = BuildingManager.instance.m_buildings.m_buffer[building];
             var info = BuildingManager.instance.m_buildings.m_buffer[building].Info;
             if (info?.GetService() == ItemClass.Service.PublicTransport && info?.GetSubService() == ItemClass.SubService.PublicTransportPost && info?.GetAI() is PostOfficeAI || 
-                info?.GetService() == ItemClass.Service.PoliceDepartment && info.GetAI().GetType().Name.Equals("NewPoliceStationAI") && (my_building.m_flags & Building.Flags.Downgrading) == 0 ||
+                info?.GetService() == ItemClass.Service.PoliceDepartment && info.GetAI().GetType().Name.Equals("NewPoliceStationAI") && info.m_class.m_level < ItemClass.Level.Level4 && (my_building.m_flags & Building.Flags.Downgrading) == 0 ||
                 info?.GetAI() is LandfillSiteAI landfillSiteAI && landfillSiteAI.m_info.name.Contains("Recycling Center"))
             {
                 return true;
