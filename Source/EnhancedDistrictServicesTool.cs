@@ -303,7 +303,6 @@ namespace EnhancedDistrictServices
                 {
                     txtItems.Add("");
                     txtItems.Add(TransferManagerInfo.GetOutputDistrictsServedText(InputType.OUTGOING,building));
-                    txtItems.Add(TransferManagerInfo.GetOutputDistrictsServedText(InputType.OUTGOING2,building));
                 }
 
                 if (Settings.enableCustomVehicles && 

@@ -260,6 +260,7 @@ namespace EnhancedDistrictServices
 
             UIAllLocalAreasCheckBox.eventCheckChanged += (c, t) =>
             {
+
                 if (m_currBuildingId == 0 || 
                     (m_inputMode == InputMode.INCOMING && t == Constraints.InputAllLocalAreas(InputType.INCOMING, m_currBuildingId)) ||
                     (m_inputMode == InputMode.OUTGOING && t == Constraints.OutputAllLocalAreas(InputType.OUTGOING, m_currBuildingId)))
@@ -483,15 +484,7 @@ namespace EnhancedDistrictServices
                 {
                     return;
                 }
-                else if (m_inputMode == InputMode.INCOMING2 && UIDistrictsDropDown.GetChecked(t) == Constraints.InputDistrictParkServiced(InputType.INCOMING2, m_currBuildingId)?.Contains(m_districtParkMapping[t]))
-                {
-                    return;
-                }
                 else if (m_inputMode == InputMode.OUTGOING && UIDistrictsDropDown.GetChecked(t) == Constraints.OutputDistrictParkServiced(InputType.OUTGOING, m_currBuildingId)?.Contains(m_districtParkMapping[t]))
-                {
-                    return;
-                }
-                else if (m_inputMode == InputMode.OUTGOING2 && UIDistrictsDropDown.GetChecked(t) == Constraints.OutputDistrictParkServiced(InputType.OUTGOING2, m_currBuildingId)?.Contains(m_districtParkMapping[t]))
                 {
                     return;
                 }
@@ -512,18 +505,6 @@ namespace EnhancedDistrictServices
                                 Constraints.RemoveInputDistrictParkServiced(InputType.INCOMING, m_currBuildingId, m_districtParkMapping[t]);
                             }
                         }
-                        else if (m_inputMode == InputMode.INCOMING2)
-                        {
-                            if (UIDistrictsDropDown.GetChecked(t))
-                            {
-                                Constraints.AddInputDistrictParkServiced(InputType.INCOMING2, m_currBuildingId, m_districtParkMapping[t]);
-                            }
-                            else
-                            {
-                                Constraints.RemoveInputDistrictParkServiced(InputType.INCOMING2, m_currBuildingId, m_districtParkMapping[t]);
-                            }
-                        }
-
                         else if (m_inputMode == InputMode.OUTGOING)
                         {
                             if (UIDistrictsDropDown.GetChecked(t))
@@ -533,6 +514,52 @@ namespace EnhancedDistrictServices
                             else
                             {
                                 Constraints.RemoveOutputDistrictParkServiced(InputType.OUTGOING, m_currBuildingId, m_districtParkMapping[t]);
+                            }
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogException(ex);
+                    }
+                    finally
+                    {
+                        UpdateUISupplyChain();
+                        UpdateUIDistrictsSummary();
+                    }
+                });
+            };
+
+            UIDistrictsDropDown2.eventCheckedChanged += (c, t) =>
+            {
+                if (m_currBuildingId == 0 || m_districtParkMapping == null)
+                {
+                    return;
+                }
+
+                if (m_inputMode == InputMode.INCOMING2 && UIDistrictsDropDown.GetChecked(t) == Constraints.InputDistrictParkServiced(InputType.INCOMING2, m_currBuildingId)?.Contains(m_districtParkMapping[t]))
+                {
+                    return;
+                }
+                else if (m_inputMode == InputMode.OUTGOING2 && UIDistrictsDropDown.GetChecked(t) == Constraints.OutputDistrictParkServiced(InputType.OUTGOING2, m_currBuildingId)?.Contains(m_districtParkMapping[t]))
+                {
+                    return;
+                }
+
+                Logger.LogVerbose($"EnhancedDistrictServicedUIPanel::UIDistrictsDropDown CheckChanged: {t}");
+                Singleton<SimulationManager>.instance.AddAction(() =>
+                {
+                    try
+                    {
+                        if (m_inputMode == InputMode.INCOMING2)
+                        {
+                            if (UIDistrictsDropDown.GetChecked(t))
+                            {
+                                Constraints.AddInputDistrictParkServiced(InputType.INCOMING2, m_currBuildingId, m_districtParkMapping[t]);
+                            }
+                            else
+                            {
+                                Constraints.RemoveInputDistrictParkServiced(InputType.INCOMING2, m_currBuildingId, m_districtParkMapping[t]);
                             }
                         }
                         else if (m_inputMode == InputMode.OUTGOING2)
