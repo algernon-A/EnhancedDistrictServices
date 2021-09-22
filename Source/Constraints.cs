@@ -504,11 +504,11 @@ namespace EnhancedDistrictServices
             var buildingName = TransferManagerInfo.GetBuildingName(buildingId);
             Logger.LogVerbose($"Constraints::SetAllInputLocalAreas: {buildingName} ({buildingId}) => {status} ...");
 
-            if(inputType == InputType.INCOMING)
+            if(inputType == InputType.INCOMING && TransferManagerInfo.IsDistrictServicesBuilding(buildingId))
             {
                 SetArrayStatus(m_inputBuildingToAllLocalAreas, buildingId, status);
             }
-            else if(inputType == InputType.INCOMING2)
+            else if(inputType == InputType.INCOMING2 && TransferManagerInfo.IsSupplyChainBuilding(buildingId))
             {
                 SetArrayStatus(m_inputBuildingToAllLocalAreas2, buildingId, status);
             }
@@ -519,11 +519,11 @@ namespace EnhancedDistrictServices
             var buildingName = TransferManagerInfo.GetBuildingName(buildingId);
             Logger.LogVerbose($"Constraints::SetAllInputOutsideConnections: {buildingName} ({buildingId}) => {status} ...");
 
-            if(inputType == InputType.INCOMING)
+            if(inputType == InputType.INCOMING && TransferManagerInfo.IsSupplyChainBuilding(buildingId))
             {
                 SetArrayStatus(m_inputBuildingToOutsideConnections, buildingId, status);
             }
-            else if(inputType == InputType.INCOMING2)
+            else if(inputType == InputType.INCOMING2 && TransferManagerInfo.IsSupplyChainBuilding(buildingId))
             {
                 SetArrayStatus(m_inputBuildingToOutsideConnections2, buildingId, status);
             }
@@ -534,11 +534,11 @@ namespace EnhancedDistrictServices
             var buildingName = TransferManagerInfo.GetBuildingName(buildingId);
             Logger.LogVerbose($"Constraints::SetAllOutputLocalAreas: {buildingName} ({buildingId}) => {status} ...");
 
-            if(inputType == InputType.OUTGOING)
+            if(inputType == InputType.OUTGOING && TransferManagerInfo.IsDistrictServicesBuilding(buildingId))
             {
                 SetArrayStatus(m_outputBuildingToAllLocalAreas, buildingId, status);
             }
-            else if(inputType == InputType.OUTGOING2)
+            else if(inputType == InputType.OUTGOING2 && TransferManagerInfo.IsSupplyChainBuilding(buildingId))
             {
                 SetArrayStatus(m_outputBuildingToAllLocalAreas2, buildingId, status);
             }
@@ -549,11 +549,11 @@ namespace EnhancedDistrictServices
             var buildingName = TransferManagerInfo.GetBuildingName(buildingId);
             Logger.LogVerbose($"Constraints::SetAllOutputOutsideConnections: {buildingName} ({buildingId}) => {status} ...");
 
-            if(inputType == InputType.OUTGOING)
+            if(inputType == InputType.OUTGOING && TransferManagerInfo.IsSupplyChainBuilding(buildingId))
             {
                 SetArrayStatus(m_outputBuildingToOutsideConnections, buildingId, status);
             }
-            else if(inputType == InputType.OUTGOING2)
+            else if(inputType == InputType.OUTGOING2 && TransferManagerInfo.IsSupplyChainBuilding(buildingId))
             {
                 SetArrayStatus(m_outputBuildingToOutsideConnections2, buildingId, status);
             }
@@ -614,12 +614,12 @@ namespace EnhancedDistrictServices
         /// <param name="districtPark"></param>
         public static void AddInputDistrictParkServiced(InputType inputType, int buildingId, DistrictPark districtPark)
         {
-            if (inputType == InputType.INCOMING && AddDistrictParkServiced(m_inputBuildingToDistrictParkServiced, buildingId, districtPark))
+            if (inputType == InputType.INCOMING && TransferManagerInfo.IsDistrictServicesBuilding(buildingId) && AddDistrictParkServiced(m_inputBuildingToDistrictParkServiced, buildingId, districtPark))
             {
                 var buildingName = TransferManagerInfo.GetBuildingName(buildingId);
                 Logger.Log($"Constraints::AddInputDistrictParkServiced: {districtPark.Name} => {buildingName} ({buildingId}) ...");
             }
-            else if (inputType == InputType.INCOMING2 && AddDistrictParkServiced(m_inputBuildingToDistrictParkServiced2, buildingId, districtPark))
+            else if (inputType == InputType.INCOMING2 && TransferManagerInfo.IsSupplyChainBuilding(buildingId) && AddDistrictParkServiced(m_inputBuildingToDistrictParkServiced2, buildingId, districtPark))
             {
                 var buildingName = TransferManagerInfo.GetBuildingName(buildingId);
                 Logger.Log($"Constraints::AddInputDistrictParkServiced: {districtPark.Name} => {buildingName} ({buildingId}) ...");
@@ -634,12 +634,12 @@ namespace EnhancedDistrictServices
         /// <param name="districtPark"></param>
         public static void AddOutputDistrictParkServiced(InputType inputType, int buildingId, DistrictPark districtPark)
         {
-            if (inputType == InputType.OUTGOING && AddDistrictParkServiced(m_outputBuildingToDistrictParkServiced, buildingId, districtPark))
+            if (inputType == InputType.OUTGOING && TransferManagerInfo.IsDistrictServicesBuilding(buildingId) && AddDistrictParkServiced(m_outputBuildingToDistrictParkServiced, buildingId, districtPark))
             {
                 var buildingName = TransferManagerInfo.GetBuildingName(buildingId);
                 Logger.Log($"Constraints::AddOutputDistrictParkServiced: {buildingName} ({buildingId}) => {districtPark.Name} ...");
             }
-            else if (inputType == InputType.OUTGOING2 && AddDistrictParkServiced(m_outputBuildingToDistrictParkServiced2, buildingId, districtPark))
+            else if (inputType == InputType.OUTGOING2 && TransferManagerInfo.IsSupplyChainBuilding(buildingId) && AddDistrictParkServiced(m_outputBuildingToDistrictParkServiced2, buildingId, districtPark))
             {
                 var buildingName = TransferManagerInfo.GetBuildingName(buildingId);
                 Logger.Log($"Constraints::AddOutputDistrictParkServiced: {buildingName} ({buildingId}) => {districtPark.Name} ...");

@@ -1048,6 +1048,8 @@ namespace EnhancedDistrictServices
                 material == TransferManager.TransferReason.Goods ||
                 material == TransferManager.TransferReason.LuxuryProducts ||
                 material == TransferManager.TransferReason.CriminalMove ||
+                material == (TransferManager.TransferReason)125 || // prison helicopter mod
+                material == (TransferManager.TransferReason)126 || // guest prison vans from prison
                 
                 material == TransferManager.TransferReason.SortedMail ||
                 material == TransferManager.TransferReason.UnsortedMail ||
