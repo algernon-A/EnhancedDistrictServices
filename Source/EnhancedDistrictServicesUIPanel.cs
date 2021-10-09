@@ -932,17 +932,9 @@ namespace EnhancedDistrictServices
                     ShowComponent(UISupplyReserve, false);
                     ShowComponent(UISupplyReserveLabel, false);
 
-                    if (TransferManagerInfo.IsSupplyChainBuilding(m_currBuildingId) && !TransferManagerInfo.IsTwoInputBuilding(m_currBuildingId))
-                    {
-                        AddTabContainerRow();
-                        AddElementToTabContainerRow(UISupplyChain);
-                        AddElementToTabContainerRow(UISupplyChainLabel);
-                    }
-                    else
-                    {
-                        ShowComponent(UISupplyChain, false);
-                        ShowComponent(UISupplyChainLabel, false);
-                    }
+                    AddTabContainerRow();
+                    AddElementToTabContainerRow(UISupplyChain);
+                    AddElementToTabContainerRow(UISupplyChainLabel);
 
                     AddTabContainerRow();
                     AddElementToTabContainerRow(UIDistrictsSummary);
@@ -1065,20 +1057,12 @@ namespace EnhancedDistrictServices
                     AddElementToTabContainerRow(UIAllLocalAreasCheckBox2);
                     AddElementToTabContainerRow(UIAllOutsideConnectionsCheckBox2);
 
-                    if (TransferManagerInfo.IsSupplyChainBuilding(m_currBuildingId) && TransferManagerInfo.IsTwoInputBuilding(m_currBuildingId))
-                    {
-                        AddTabContainerRow();
-                        AddElementToTabContainerRow(UISupplyChain);
-                        AddElementToTabContainerRow(UISupplyChainLabel);
-                    }
-                    else
-                    {
-                        ShowComponent(UISupplyChain, false);
-                        ShowComponent(UISupplyChainLabel, false);
-                    }
-
                     ShowComponent(UISupplyReserve, false);
                     ShowComponent(UISupplyReserveLabel, false);
+
+                    AddTabContainerRow();
+                    AddElementToTabContainerRow(UISupplyChain);
+                    AddElementToTabContainerRow(UISupplyChainLabel);
 
                     AddTabContainerRow();
                     AddElementToTabContainerRow(UIDistrictsSummary);
@@ -1127,15 +1111,18 @@ namespace EnhancedDistrictServices
             {
                 UIAllLocalAreasCheckBox.isChecked = Constraints.InputAllLocalAreas(InputType.INCOMING, m_currBuildingId);
             }
-            else if (m_inputMode == InputMode.INCOMING2)
+
+            if (m_inputMode == InputMode.INCOMING2)
             {
                 UIAllLocalAreasCheckBox2.isChecked = Constraints.InputAllLocalAreas(InputType.INCOMING2, m_currBuildingId);
             }
-            else if (m_inputMode == InputMode.OUTGOING)
+
+            if (m_inputMode == InputMode.OUTGOING)
             {
                 UIAllLocalAreasCheckBox.isChecked = Constraints.OutputAllLocalAreas(InputType.OUTGOING, m_currBuildingId);
             }
-            else if (m_inputMode == InputMode.OUTGOING2)
+
+            if (m_inputMode == InputMode.OUTGOING2)
             {
                 UIAllLocalAreasCheckBox2.isChecked = Constraints.OutputAllLocalAreas(InputType.OUTGOING2, m_currBuildingId);
             }
@@ -1416,15 +1403,8 @@ namespace EnhancedDistrictServices
             if (m_inputMode == InputMode.INCOMING || m_inputMode == InputMode.INCOMING2)
             {
                 var homeDistrictPark = TransferManagerInfo.GetDistrictPark(m_currBuildingId);
-                var districtParkServed = Constraints.InputDistrictParkServiced(InputType.INCOMING, m_currBuildingId);
-
-                var tooltipText = TransferManagerInfo.GetSupplyBuildingSourcesText(InputType.INCOMING, m_currBuildingId);
-
-                if(m_inputMode == InputMode.INCOMING2)
-                {
-                    districtParkServed = Constraints.InputDistrictParkServiced(InputType.INCOMING2, m_currBuildingId);
-                    tooltipText = TransferManagerInfo.GetSupplyBuildingSourcesText(InputType.INCOMING2, m_currBuildingId);
-                }
+                var districtParkServed = Constraints.InputDistrictParkServiced((InputType)m_inputMode, m_currBuildingId);
+                var tooltipText = TransferManagerInfo.GetSupplyBuildingSourcesText((InputType)m_inputMode, m_currBuildingId);
 
                 if (districtParkServed == null || districtParkServed.Count == 0)
                 {
@@ -1458,16 +1438,10 @@ namespace EnhancedDistrictServices
             if (m_inputMode == InputMode.OUTGOING || m_inputMode == InputMode.OUTGOING2)
             {
                 var homeDistrictPark = TransferManagerInfo.GetDistrictPark(m_currBuildingId);
-                var districtParkServed = Constraints.OutputDistrictParkServiced(InputType.OUTGOING, m_currBuildingId);
+                var districtParkServed = Constraints.OutputDistrictParkServiced((InputType)m_inputMode, m_currBuildingId);
 
                 var buildingInputTypes = TransferManagerInfo.GetBuildingInputTypes(m_currBuildingId);
-                var tooltipText = buildingInputTypes.Contains(InputType.SUPPLY_CHAIN) ? TransferManagerInfo.GetOutputDistrictsServedText(InputType.OUTGOING, m_currBuildingId) : TransferManagerInfo.GetSupplyBuildingDestinationsText(InputType.OUTGOING, m_currBuildingId);
-
-                if(m_inputMode == InputMode.OUTGOING2)
-                {
-                    districtParkServed = Constraints.OutputDistrictParkServiced(InputType.OUTGOING2, m_currBuildingId);
-                    tooltipText = buildingInputTypes.Contains(InputType.SUPPLY_CHAIN) ? TransferManagerInfo.GetOutputDistrictsServedText(InputType.OUTGOING2, m_currBuildingId) : TransferManagerInfo.GetSupplyBuildingDestinationsText(InputType.OUTGOING2, m_currBuildingId);
-                }
+                var tooltipText = buildingInputTypes.Contains(InputType.SUPPLY_CHAIN) ? TransferManagerInfo.GetSupplyBuildingDestinationsText((InputType)m_inputMode, m_currBuildingId) : TransferManagerInfo.GetOutputDistrictsServedText((InputType)m_inputMode, m_currBuildingId);
 
                 if (districtParkServed == null || districtParkServed.Count == 0)
                 {

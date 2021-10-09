@@ -177,7 +177,9 @@ namespace EnhancedDistrictServices
             UIOutgoingTab2 = UIInputMode.AddTab("Outgoing2", buttonTemplate, true);
             UIIncomingTab2 = UIInputMode.AddTab("Incoming2", buttonTemplate, true);
             if (Settings.enableCustomVehicles)
+            {
                 UIVehiclesTab = UIInputMode.AddTab("Vehicles", buttonTemplate, true);
+            }  
             UIGlobalTab = UIInputMode.AddTab("Global", buttonTemplate, true);
 
             UIAllLocalAreasCheckBox = AttachUICheckBoxTo(this, 113, 88);

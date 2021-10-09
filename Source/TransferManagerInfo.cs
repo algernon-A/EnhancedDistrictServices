@@ -981,8 +981,11 @@ namespace EnhancedDistrictServices
         {
             return
                 material == TransferManager.TransferReason.Garbage ||
-                material == TransferManager.TransferReason.Crime ||
-                material == TransferManager.TransferReason.CriminalMove ||
+                material == TransferManager.TransferReason.Crime || // police
+                material == TransferManager.TransferReason.CriminalMove || // prison vans - if PH is enabled prison helicopters from police helicopter depot
+                material == (TransferManager.TransferReason)126 || // prison vans from prison (PH mod)
+                material == (TransferManager.TransferReason)125 || // prison vans from police station (PH mod)
+
                 material == TransferManager.TransferReason.Sick ||
                 material == TransferManager.TransferReason.Dead ||
                 material == TransferManager.TransferReason.Fire ||
@@ -1089,7 +1092,8 @@ namespace EnhancedDistrictServices
             var my_building = BuildingManager.instance.m_buildings.m_buffer[building];
             var info = BuildingManager.instance.m_buildings.m_buffer[building].Info;
             if (info?.GetService() == ItemClass.Service.PublicTransport && info?.GetSubService() == ItemClass.SubService.PublicTransportPost && info?.GetAI() is PostOfficeAI || 
-                info?.GetService() == ItemClass.Service.PoliceDepartment && info.GetAI().GetType().Name.Equals("NewPoliceStationAI") && info.m_class.m_level < ItemClass.Level.Level4 && (my_building.m_flags & Building.Flags.Downgrading) == 0 ||
+                info?.GetService() == ItemClass.Service.PoliceDepartment && (
+                info.GetAI().GetType().Name.Equals("NewPoliceStationAI") && info.m_class.m_level < ItemClass.Level.Level4 || info.GetAI() is HelicopterDepotAI) && (my_building.m_flags & Building.Flags.Downgrading) == 0 ||
                 info?.GetAI() is LandfillSiteAI landfillSiteAI && landfillSiteAI.m_info.name.Contains("Recycling Center"))
             {
                 return true;
