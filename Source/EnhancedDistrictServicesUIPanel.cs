@@ -27,6 +27,11 @@ namespace EnhancedDistrictServices
         private readonly List<DistrictPark> m_districtParkMapping = new List<DistrictPark>(capacity: DistrictPark.MAX_DISTRICT_PARK_COUNT);
 
         /// <summary>
+        /// Mapping of dropdown index to DistrictPark. 
+        /// </summary>
+        private readonly List<DistrictPark> m_districtParkMapping2 = new List<DistrictPark>(capacity: DistrictPark.MAX_DISTRICT_PARK_COUNT);
+
+        /// <summary>
         /// Mapping of dropdown index to prefab index to vehicle info.
         /// </summary>
         private readonly List<int> m_vehicleMapping = new List<int>();
@@ -532,16 +537,16 @@ namespace EnhancedDistrictServices
 
             UIDistrictsDropDown2.eventCheckedChanged += (c, t) =>
             {
-                if (m_currBuildingId == 0 || m_districtParkMapping == null)
+                if (m_currBuildingId == 0 || m_districtParkMapping2 == null)
                 {
                     return;
                 }
 
-                if (m_inputMode == InputMode.INCOMING2 && UIDistrictsDropDown.GetChecked(t) == Constraints.InputDistrictParkServiced(InputType.INCOMING2, m_currBuildingId)?.Contains(m_districtParkMapping[t]))
+                if (m_inputMode == InputMode.INCOMING2 && UIDistrictsDropDown2.GetChecked(t) == Constraints.InputDistrictParkServiced(InputType.INCOMING2, m_currBuildingId)?.Contains(m_districtParkMapping2[t]))
                 {
                     return;
                 }
-                else if (m_inputMode == InputMode.OUTGOING2 && UIDistrictsDropDown.GetChecked(t) == Constraints.OutputDistrictParkServiced(InputType.OUTGOING2, m_currBuildingId)?.Contains(m_districtParkMapping[t]))
+                else if (m_inputMode == InputMode.OUTGOING2 && UIDistrictsDropDown2.GetChecked(t) == Constraints.OutputDistrictParkServiced(InputType.OUTGOING2, m_currBuildingId)?.Contains(m_districtParkMapping2[t]))
                 {
                     return;
                 }
@@ -553,24 +558,24 @@ namespace EnhancedDistrictServices
                     {
                         if (m_inputMode == InputMode.INCOMING2)
                         {
-                            if (UIDistrictsDropDown.GetChecked(t))
+                            if (UIDistrictsDropDown2.GetChecked(t))
                             {
-                                Constraints.AddInputDistrictParkServiced(InputType.INCOMING2, m_currBuildingId, m_districtParkMapping[t]);
+                                Constraints.AddInputDistrictParkServiced(InputType.INCOMING2, m_currBuildingId, m_districtParkMapping2[t]);
                             }
                             else
                             {
-                                Constraints.RemoveInputDistrictParkServiced(InputType.INCOMING2, m_currBuildingId, m_districtParkMapping[t]);
+                                Constraints.RemoveInputDistrictParkServiced(InputType.INCOMING2, m_currBuildingId, m_districtParkMapping2[t]);
                             }
                         }
                         else if (m_inputMode == InputMode.OUTGOING2)
                         {
-                            if (UIDistrictsDropDown.GetChecked(t))
+                            if (UIDistrictsDropDown2.GetChecked(t))
                             {
-                                Constraints.AddOutputDistrictParkServiced(InputType.OUTGOING2, m_currBuildingId, m_districtParkMapping[t]);
+                                Constraints.AddOutputDistrictParkServiced(InputType.OUTGOING2, m_currBuildingId, m_districtParkMapping2[t]);
                             }
                             else
                             {
-                                Constraints.RemoveOutputDistrictParkServiced(InputType.OUTGOING2, m_currBuildingId, m_districtParkMapping[t]);
+                                Constraints.RemoveOutputDistrictParkServiced(InputType.OUTGOING2, m_currBuildingId, m_districtParkMapping2[t]);
                             }
                         }
                     }
@@ -881,7 +886,7 @@ namespace EnhancedDistrictServices
                     AddElementToTabContainerRow(UIAllLocalAreasCheckBox);
 
                     var info = BuildingManager.instance.m_buildings.m_buffer[m_currBuildingId].Info;
-                    if (TransferManagerInfo.IsSupplyChainBuilding(m_currBuildingId) || info.GetAI() is FishFarmAI || info.GetAI() is FishingHarborAI)
+                    if (TransferManagerInfo.IsSupplyChainBuilding(m_currBuildingId) && !TransferManagerInfo.IsTwoOutputBuilding(m_currBuildingId) || info.GetAI() is FishFarmAI || info.GetAI() is FishingHarborAI)
                     {
                         AddElementToTabContainerRow(UIAllOutsideConnectionsCheckBox);
                     }

@@ -154,7 +154,7 @@ namespace EnhancedDistrictServices
                     }
                 }
 
-                 var restrictions3b = data.InputBuildingToDistrictServiced2[building];
+                var restrictions3b = data.InputBuildingToDistrictServiced2[building];
                 if (restrictions3b != null)
                 {
                     foreach (var districtPark in restrictions3b)
@@ -232,9 +232,21 @@ namespace EnhancedDistrictServices
                     .Select(list => list?.Select(districtPark => districtPark.ToSerializedInt()).ToList())
                     .ToArray(),
 
+                InputBuildingToAllLocalAreas2 = m_inputBuildingToAllLocalAreas2.ToArray(),
+                InputBuildingToOutsideConnections2 = m_inputBuildingToOutsideConnections2.ToArray(),
+                InputBuildingToDistrictServiced2 = m_inputBuildingToDistrictParkServiced2
+                    .Select(list => list?.Select(districtPark => districtPark.ToSerializedInt()).ToList())
+                    .ToArray(),
+
                 OutputBuildingToAllLocalAreas = m_outputBuildingToAllLocalAreas.ToArray(),
                 OutputBuildingToOutsideConnections = m_outputBuildingToOutsideConnections.ToArray(),
                 OutputBuildingToDistrictServiced = m_outputBuildingToDistrictParkServiced
+                    .Select(list => list?.Select(districtPark => districtPark.ToSerializedInt()).ToList())
+                    .ToArray(),
+
+                OutputBuildingToAllLocalAreas2 = m_outputBuildingToAllLocalAreas2.ToArray(),
+                OutputBuildingToOutsideConnections2 = m_outputBuildingToOutsideConnections2.ToArray(),
+                OutputBuildingToDistrictServiced2 = m_outputBuildingToDistrictParkServiced2
                     .Select(list => list?.Select(districtPark => districtPark.ToSerializedInt()).ToList())
                     .ToArray(),
 
@@ -272,30 +284,50 @@ namespace EnhancedDistrictServices
 
             // Set default input settings.
             SetAllInputLocalAreas(InputType.INCOMING, buildingId, true);
-            SetAllInputLocalAreas(InputType.INCOMING2, buildingId, true);
-            SetAllInputOutsideConnections(InputType.INCOMING, buildingId, true);
-            SetAllInputOutsideConnections(InputType.INCOMING2, buildingId, true);
             m_inputBuildingToDistrictParkServiced[buildingId] = null;
-            m_inputBuildingToDistrictParkServiced2[buildingId] = null;
+            if(TransferManagerInfo.IsTwoInputBuilding(buildingId))
+            {
+                SetAllInputLocalAreas(InputType.INCOMING2, buildingId, true);
+                SetAllInputOutsideConnections(InputType.INCOMING2, buildingId, true);
+                m_inputBuildingToDistrictParkServiced2[buildingId] = null;
+            }
+            else
+            {
+                SetAllInputOutsideConnections(InputType.INCOMING, buildingId, true);
+            }
+
 
             // Serve all areas if the building doesn't belong to any district or park.
             SetAllOutputLocalAreas(InputType.OUTGOING, buildingId, homeDistrict == 0 && homePark == 0);
-            SetAllOutputLocalAreas(InputType.OUTGOING2, buildingId, homeDistrict == 0 && homePark == 0);
-            SetAllOutputOutsideConnections(InputType.OUTGOING, buildingId, homeDistrict == 0 && homePark == 0);
-            SetAllOutputOutsideConnections(InputType.OUTGOING2, buildingId, homeDistrict == 0 && homePark == 0);
             m_outputBuildingToDistrictParkServiced[buildingId] = null;
-            m_outputBuildingToDistrictParkServiced2[buildingId] = null;
-
+            if(TransferManagerInfo.IsTwoOutputBuilding(buildingId))
+            {
+                SetAllOutputLocalAreas(InputType.OUTGOING2, buildingId, homeDistrict == 0 && homePark == 0);
+                SetAllOutputOutsideConnections(InputType.OUTGOING2, buildingId, homeDistrict == 0 && homePark == 0);
+                m_outputBuildingToDistrictParkServiced2[buildingId] = null;
+            }
+            else
+            {
+                SetAllOutputOutsideConnections(InputType.OUTGOING, buildingId, homeDistrict == 0 && homePark == 0);
+            }
+            
             if (homeDistrict != 0)
             {
                 AddOutputDistrictParkServiced(InputType.OUTGOING, buildingId, DistrictPark.FromDistrict(homeDistrict));
-                AddOutputDistrictParkServiced(InputType.OUTGOING2, buildingId, DistrictPark.FromDistrict(homeDistrict));
+                if(TransferManagerInfo.IsTwoOutputBuilding(buildingId))
+                {
+                    AddOutputDistrictParkServiced(InputType.OUTGOING2, buildingId, DistrictPark.FromDistrict(homeDistrict));
+                }
+                
             }
 
             if (homePark != 0)
             {
                 AddOutputDistrictParkServiced(InputType.OUTGOING, buildingId, DistrictPark.FromPark(homePark));
-                AddOutputDistrictParkServiced(InputType.OUTGOING2, buildingId, DistrictPark.FromPark(homePark));
+                if(TransferManagerInfo.IsTwoOutputBuilding(buildingId))
+                {
+                    AddOutputDistrictParkServiced(InputType.OUTGOING2, buildingId, DistrictPark.FromPark(homePark));
+                }
             }
         }
 
@@ -357,7 +389,11 @@ namespace EnhancedDistrictServices
             {
                 return m_inputBuildingToAllLocalAreas2[buildingId];
             }
-            return m_inputBuildingToAllLocalAreas[buildingId];
+            else
+            {
+                return m_inputBuildingToAllLocalAreas[buildingId];
+            }
+           
         }
 
         /// <summary>
@@ -372,7 +408,11 @@ namespace EnhancedDistrictServices
             {
                 return m_inputBuildingToOutsideConnections2[buildingId];
             }
-            return m_inputBuildingToOutsideConnections[buildingId];
+            else
+            {
+                return m_inputBuildingToOutsideConnections[buildingId];
+            }
+            
         }
 
         /// <summary>
@@ -388,7 +428,11 @@ namespace EnhancedDistrictServices
             {
                 return m_inputBuildingToDistrictParkServiced2[buildingId];
             }
-            return m_inputBuildingToDistrictParkServiced[buildingId];
+            else
+            {
+                return m_inputBuildingToDistrictParkServiced[buildingId];
+            }
+            
         }
 
         /// <summary>
@@ -403,7 +447,11 @@ namespace EnhancedDistrictServices
             {
                 return m_outputBuildingToAllLocalAreas2[buildingId];
             }
-            return m_outputBuildingToAllLocalAreas[buildingId];
+            else
+            {
+                return m_outputBuildingToAllLocalAreas[buildingId];
+            }
+            
         }
 
         /// <summary>
@@ -418,7 +466,11 @@ namespace EnhancedDistrictServices
             {
                 return m_outputBuildingToOutsideConnections2[buildingId];
             }
-            return m_outputBuildingToOutsideConnections[buildingId];
+            else
+            {
+                return m_outputBuildingToOutsideConnections[buildingId];
+            }
+            
         }
 
         /// <summary>
@@ -433,8 +485,12 @@ namespace EnhancedDistrictServices
             if(inputType == InputType.OUTGOING2)
             {
                 return m_outputBuildingToDistrictParkServiced2[buildingId];
+            } 
+            else
+            {
+                return m_outputBuildingToDistrictParkServiced[buildingId];
             }
-            return m_outputBuildingToDistrictParkServiced[buildingId];
+            
         }
 
         /// <summary>
