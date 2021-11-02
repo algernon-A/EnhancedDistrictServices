@@ -8,8 +8,11 @@ namespace EnhancedDistrictServices.Serialization
     public class Datav1
     {
         public bool[] BuildingToAllLocalAreas = new bool[BuildingManager.MAX_BUILDING_COUNT];
+        public bool[] BuildingToAllLocalAreas2 = new bool[BuildingManager.MAX_BUILDING_COUNT];
         public bool[] BuildingToOutsideConnections = new bool[BuildingManager.MAX_BUILDING_COUNT];
+        public bool[] BuildingToOutsideConnections2 = new bool[BuildingManager.MAX_BUILDING_COUNT];
         public List<int>[] BuildingToDistrictServiced = new List<int>[BuildingManager.MAX_BUILDING_COUNT];
+        public List<int>[] BuildingToDistrictServiced2 = new List<int>[BuildingManager.MAX_BUILDING_COUNT];
         public List<int>[] BuildingToBuildingServiced = new List<int>[BuildingManager.MAX_BUILDING_COUNT];
 
         private static readonly string m_id = "EnhancedDistrictServices_vchronofanz";
@@ -65,9 +68,12 @@ namespace EnhancedDistrictServices.Serialization
             return new Datav2
             {
                 BuildingToAllLocalAreas = this.BuildingToAllLocalAreas,
+                BuildingToAllLocalAreas2 = this.BuildingToAllLocalAreas2,
                 BuildingToOutsideConnections = this.BuildingToOutsideConnections,
+                BuildingToOutsideConnections2 = this.BuildingToOutsideConnections2,
                 BuildingToInternalSupplyBuffer = defaultBuildingToInteralSupplyBuffer,
                 BuildingToDistrictServiced = this.BuildingToDistrictServiced,
+                BuildingToDistrictServiced2 = this.BuildingToDistrictServiced2,
                 BuildingToBuildingServiced = this.BuildingToBuildingServiced
             };
         }

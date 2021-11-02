@@ -8,12 +8,18 @@ namespace EnhancedDistrictServices.Serialization
     public class Datav3
     {
         public bool[] InputBuildingToAllLocalAreas = new bool[BuildingManager.MAX_BUILDING_COUNT];
+        public bool[] InputBuildingToAllLocalAreas2 = new bool[BuildingManager.MAX_BUILDING_COUNT];
         public bool[] InputBuildingToOutsideConnections = new bool[BuildingManager.MAX_BUILDING_COUNT];
+        public bool[] InputBuildingToOutsideConnections2 = new bool[BuildingManager.MAX_BUILDING_COUNT];
         public List<int>[] InputBuildingToDistrictServiced = new List<int>[BuildingManager.MAX_BUILDING_COUNT];
+        public List<int>[] InputBuildingToDistrictServiced2 = new List<int>[BuildingManager.MAX_BUILDING_COUNT];
 
         public bool[] OutputBuildingToAllLocalAreas = new bool[BuildingManager.MAX_BUILDING_COUNT];
+        public bool[] OutputBuildingToAllLocalAreas2 = new bool[BuildingManager.MAX_BUILDING_COUNT];
         public bool[] OutputBuildingToOutsideConnections = new bool[BuildingManager.MAX_BUILDING_COUNT];
+        public bool[] OutputBuildingToOutsideConnections2 = new bool[BuildingManager.MAX_BUILDING_COUNT];
         public List<int>[] OutputBuildingToDistrictServiced = new List<int>[BuildingManager.MAX_BUILDING_COUNT];
+        public List<int>[] OutputBuildingToDistrictServiced2 = new List<int>[BuildingManager.MAX_BUILDING_COUNT];
 
         public int[] BuildingToInternalSupplyBuffer = new int[BuildingManager.MAX_BUILDING_COUNT];
         public List<int>[] BuildingToBuildingServiced = new List<int>[BuildingManager.MAX_BUILDING_COUNT];
@@ -66,12 +72,18 @@ namespace EnhancedDistrictServices.Serialization
             return new Datav4
             {
                 InputBuildingToAllLocalAreas = this.InputBuildingToAllLocalAreas,
+                InputBuildingToAllLocalAreas2 = this.InputBuildingToAllLocalAreas2,
                 InputBuildingToOutsideConnections = this.InputBuildingToOutsideConnections,
+                InputBuildingToOutsideConnections2 = this.InputBuildingToOutsideConnections2,
                 InputBuildingToDistrictServiced = this.InputBuildingToDistrictServiced,
+                InputBuildingToDistrictServiced2 = this.InputBuildingToDistrictServiced2,
 
                 OutputBuildingToAllLocalAreas = this.OutputBuildingToAllLocalAreas,
+                OutputBuildingToAllLocalAreas2 = this.OutputBuildingToAllLocalAreas2,
                 OutputBuildingToOutsideConnections = this.OutputBuildingToOutsideConnections,
+                OutputBuildingToOutsideConnections2 = this.OutputBuildingToOutsideConnections2,
                 OutputBuildingToDistrictServiced = this.OutputBuildingToDistrictServiced,
+                OutputBuildingToDistrictServiced2 = this.OutputBuildingToDistrictServiced2,
 
                 BuildingToInternalSupplyBuffer = this.BuildingToInternalSupplyBuffer,
                 BuildingToBuildingServiced = this.BuildingToBuildingServiced,

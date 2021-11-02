@@ -8,9 +8,12 @@ namespace EnhancedDistrictServices.Serialization
     public class Datav2
     {
         public bool[] BuildingToAllLocalAreas = new bool[BuildingManager.MAX_BUILDING_COUNT];
+        public bool[] BuildingToAllLocalAreas2 = new bool[BuildingManager.MAX_BUILDING_COUNT];
         public bool[] BuildingToOutsideConnections = new bool[BuildingManager.MAX_BUILDING_COUNT];
+        public bool[] BuildingToOutsideConnections2 = new bool[BuildingManager.MAX_BUILDING_COUNT];
         public int[] BuildingToInternalSupplyBuffer = new int[BuildingManager.MAX_BUILDING_COUNT];
         public List<int>[] BuildingToDistrictServiced = new List<int>[BuildingManager.MAX_BUILDING_COUNT];
+        public List<int>[] BuildingToDistrictServiced2 = new List<int>[BuildingManager.MAX_BUILDING_COUNT];
         public List<int>[] BuildingToBuildingServiced = new List<int>[BuildingManager.MAX_BUILDING_COUNT];
         public int GlobalOutsideConnectionIntensity = 15;
 
@@ -65,13 +68,26 @@ namespace EnhancedDistrictServices.Serialization
                 defaultInputBuildingToAllLocalAreas[b] = true;
             }
 
+            var defaultInputBuildingToAllLocalAreas2 = new bool[BuildingManager.MAX_BUILDING_COUNT];
+            for (int b = 0; b < defaultInputBuildingToAllLocalAreas2.Length; b++)
+            {
+                defaultInputBuildingToAllLocalAreas2[b] = true;
+            }
+
             var defaultInputBuildingToOutsideConnections = new bool[BuildingManager.MAX_BUILDING_COUNT];
             for (int b = 0; b < defaultInputBuildingToOutsideConnections.Length; b++)
             {
                 defaultInputBuildingToOutsideConnections[b] = true;
             }
 
+            var defaultInputBuildingToOutsideConnections2 = new bool[BuildingManager.MAX_BUILDING_COUNT];
+            for (int b = 0; b < defaultInputBuildingToOutsideConnections2.Length; b++)
+            {
+                defaultInputBuildingToOutsideConnections2[b] = true;
+            }
+
             var defaultInputBuildingToDistrictServiced = new List<int>[BuildingManager.MAX_BUILDING_COUNT];
+            var defaultInputBuildingToDistrictServiced2 = new List<int>[BuildingManager.MAX_BUILDING_COUNT];
 
             // Note that input data is only relevant to supply buildings.
             // The only previous input restriction we had in v2 was from the building to building serviced data.
@@ -84,8 +100,11 @@ namespace EnhancedDistrictServices.Serialization
                     // But previously, the understanding was that if a supply chain out restriction was placed, then 
                     // no other districts would be serviced ...
                     this.BuildingToAllLocalAreas[b] = false;
+                    this.BuildingToAllLocalAreas2[b] = false;
                     this.BuildingToOutsideConnections[b] = false;
+                    this.BuildingToOutsideConnections2[b] = false;
                     this.BuildingToDistrictServiced[b] = null;
+                    this.BuildingToDistrictServiced2[b] = null;
 
                     for (int i = 0; i < BuildingToBuildingServiced[b].Count; i++)
                     {
@@ -96,7 +115,9 @@ namespace EnhancedDistrictServices.Serialization
 
                             Logger.Log($"Datav2::Upgrade: building {buildingIn} has input restriction ...");
                             defaultInputBuildingToAllLocalAreas[buildingIn] = false;
+                            defaultInputBuildingToAllLocalAreas2[buildingIn] = false;
                             defaultInputBuildingToOutsideConnections[buildingIn] = false;
+                            defaultInputBuildingToOutsideConnections2[buildingIn] = false;
                         }
                     }
                 }
