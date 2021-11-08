@@ -135,6 +135,7 @@ namespace EnhancedDistrictServices
         public UILabel UISupplyChainLabel;
         public UITextField UISupplyChain;
         public UILabel UIDistrictsSummary;
+        public UILabel UIDistrictsSummary2;
         public UICheckboxDropDown UIDistrictsDropDown;
         public UICheckboxDropDown UIDistrictsDropDown2;
 
@@ -197,6 +198,8 @@ namespace EnhancedDistrictServices
 
             UIDistrictsSummary = AttachUILabelTo(this, 3, 148);
             UIDistrictsSummary.zOrder = 0;
+            UIDistrictsSummary2 = AttachUILabelTo(this, 3, 148);
+            UIDistrictsSummary2.zOrder = 0;
             UIDistrictsDropDown = AttachUICheckboxDropDownTo(this, 3, 148 + 3);
             UIDistrictsDropDown.eventDropdownOpen += UIEventDropdownOpen;
             UIDistrictsDropDown.eventDropdownClose += UIEventDropdownClose;

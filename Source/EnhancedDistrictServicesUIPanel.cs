@@ -919,6 +919,7 @@ namespace EnhancedDistrictServices
 
                     ShowComponent(UIAllLocalAreasCheckBox2, false);
                     ShowComponent(UIAllOutsideConnectionsCheckBox2, false);
+                    ShowComponent(UIDistrictsSummary2, false);
                     ShowComponent(UIDistrictsDropDown2, false);
                     ShowComponent(UIVehicleDefaultsCheckBox, false);
                     ShowComponent(UIVehiclesSummary, false);
@@ -947,6 +948,7 @@ namespace EnhancedDistrictServices
 
                     ShowComponent(UIAllLocalAreasCheckBox2, false);
                     ShowComponent(UIAllOutsideConnectionsCheckBox2, false);
+                    ShowComponent(UIDistrictsSummary2, false);
                     ShowComponent(UIDistrictsDropDown2, false);
                     ShowComponent(UIVehicleDefaultsCheckBox, false);
                     ShowComponent(UIVehiclesSummary, false);
@@ -968,6 +970,7 @@ namespace EnhancedDistrictServices
                     ShowComponent(UISupplyChain, false);
                     ShowComponent(UISupplyChainLabel, false);
                     ShowComponent(UIDistrictsSummary, false);
+                    ShowComponent(UIDistrictsSummary2, false);
                     ShowComponent(UIDistrictsDropDown, false);
                     ShowComponent(UIDistrictsDropDown2, false);
 
@@ -995,6 +998,7 @@ namespace EnhancedDistrictServices
                     ShowComponent(UISupplyChain, false);
                     ShowComponent(UISupplyChainLabel, false);
                     ShowComponent(UIDistrictsSummary, false);
+                    ShowComponent(UIDistrictsSummary2, false);
                     ShowComponent(UIDistrictsDropDown, false);
                     ShowComponent(UIDistrictsDropDown2, false);
                     ShowComponent(UIVehicleDefaultsCheckBox, false);
@@ -1042,11 +1046,12 @@ namespace EnhancedDistrictServices
                     }
 
                     AddTabContainerRow();
-                    AddElementToTabContainerRow(UIDistrictsSummary);
+                    AddElementToTabContainerRow(UIDistrictsSummary2);
                     AddElementToTabContainerRow(UIDistrictsDropDown2);
 
                     ShowComponent(UIAllLocalAreasCheckBox, false);
                     ShowComponent(UIAllOutsideConnectionsCheckBox, false);
+                    ShowComponent(UIDistrictsSummary, false);
                     ShowComponent(UIDistrictsDropDown, false);
                     ShowComponent(UIVehicleDefaultsCheckBox, false);
                     ShowComponent(UIVehiclesSummary, false);
@@ -1070,11 +1075,12 @@ namespace EnhancedDistrictServices
                     AddElementToTabContainerRow(UISupplyChainLabel);
 
                     AddTabContainerRow();
-                    AddElementToTabContainerRow(UIDistrictsSummary);
+                    AddElementToTabContainerRow(UIDistrictsSummary2);
                     AddElementToTabContainerRow(UIDistrictsDropDown2);
 
                     ShowComponent(UIAllLocalAreasCheckBox, false);
                     ShowComponent(UIAllOutsideConnectionsCheckBox, false);
+                    ShowComponent(UIDistrictsSummary, false);
                     ShowComponent(UIDistrictsDropDown, false);
                     ShowComponent(UIVehicleDefaultsCheckBox, false);
                     ShowComponent(UIVehiclesSummary, false);
@@ -1165,7 +1171,7 @@ namespace EnhancedDistrictServices
                         ShowComponent(UISupplyChainLabel, !UIAllLocalAreasCheckBox2.isChecked);
                     }
 
-                    ShowComponent(UIDistrictsSummary, !UIAllLocalAreasCheckBox2.isChecked);
+                    ShowComponent(UIDistrictsSummary2, !UIAllLocalAreasCheckBox2.isChecked);
                     ShowComponent(UIDistrictsDropDown2, !UIAllLocalAreasCheckBox2.isChecked);
 
                     break;
@@ -1173,7 +1179,7 @@ namespace EnhancedDistrictServices
                 case InputMode.INCOMING2:
                     ShowComponent(UISupplyChain, !UIAllLocalAreasCheckBox2.isChecked);
                     ShowComponent(UISupplyChainLabel, !UIAllLocalAreasCheckBox2.isChecked);
-                    ShowComponent(UIDistrictsSummary, !UIAllLocalAreasCheckBox2.isChecked);
+                    ShowComponent(UIDistrictsSummary2, !UIAllLocalAreasCheckBox2.isChecked);
                     ShowComponent(UIDistrictsDropDown2, !UIAllLocalAreasCheckBox2.isChecked);
 
                     break;
@@ -1395,84 +1401,98 @@ namespace EnhancedDistrictServices
 
         private void UpdateUIDistrictsSummary()
         {
-            Logger.LogVerbose("EnhancedDistrictServicedUIPanel::UIDistrictsSummary Update");
+            Logger.LogVerbose("EnhancedDistrictServicedUIPanel::UIDistrictsSummary and UIDistrictsSummary2 Update");
 
             if (m_currBuildingId == 0 || !(m_inputMode == InputMode.INCOMING || m_inputMode == InputMode.OUTGOING || m_inputMode == InputMode.INCOMING2 || m_inputMode == InputMode.OUTGOING2))
             {
                 UIDistrictsSummary.text = string.Empty;
+                UIDistrictsSummary2.text = string.Empty;
                 UIDistrictsDropDown.triggerButton.tooltip = string.Empty;
                 UIDistrictsDropDown2.triggerButton.tooltip = string.Empty;
                 return;
             }
 
+            var homeDistrictPark = TransferManagerInfo.GetDistrictPark(m_currBuildingId);
+            var inputDistrictParkServed = Constraints.InputDistrictParkServiced((InputType)m_inputMode, m_currBuildingId);
+            var outputDistrictParkServed = Constraints.OutputDistrictParkServiced((InputType)m_inputMode, m_currBuildingId);
+            var buildingInputTypes = TransferManagerInfo.GetBuildingInputTypes(m_currBuildingId);
+            string tooltipText;
+            if (buildingInputTypes.Contains(InputType.SUPPLY_CHAIN))
+            {
+                tooltipText = TransferManagerInfo.GetSupplyBuildingDestinationsText((InputType)m_inputMode, m_currBuildingId);
+            }
+            else
+            {
+                tooltipText = TransferManagerInfo.GetOutputDistrictsServedText((InputType)m_inputMode, m_currBuildingId);
+            }
+
             if (m_inputMode == InputMode.INCOMING || m_inputMode == InputMode.INCOMING2)
             {
-                var homeDistrictPark = TransferManagerInfo.GetDistrictPark(m_currBuildingId);
-                var districtParkServed = Constraints.InputDistrictParkServiced((InputType)m_inputMode, m_currBuildingId);
-                var tooltipText = TransferManagerInfo.GetSupplyBuildingSourcesText((InputType)m_inputMode, m_currBuildingId);
-
-                if (districtParkServed == null || districtParkServed.Count == 0)
+               
+                if (inputDistrictParkServed == null || inputDistrictParkServed.Count == 0)
                 {
                     UIDistrictsSummary.text = "Shipments from Districts: None";
+                    UIDistrictsSummary2.text = "Shipments from Districts: None";
                     UIDistrictsDropDown.triggerButton.tooltip = tooltipText;
                     UIDistrictsDropDown2.triggerButton.tooltip = tooltipText;
                 }
-                // Note that using List::Contains is the wrong thing to do, since the districtParkServed array is 
-                // guaranteed to contain elements that refer to either 1 district or 1 park, but not both, while a building
-                // might belong to both the district or park ...
-                else if (!homeDistrictPark.IsEmpty && homeDistrictPark.IsServedBy(districtParkServed))
+                else if (!homeDistrictPark.IsEmpty && homeDistrictPark.IsServedBy(inputDistrictParkServed))
                 {
-                    if (districtParkServed.Count == 1)
+                    if (inputDistrictParkServed.Count == 1)
                     {
                         UIDistrictsSummary.text = $"Shipments from Districts: Home only";
+                        UIDistrictsSummary2.text = $"Shipments from Districts: Home only";
                     }
                     else
                     {
-                        UIDistrictsSummary.text = $"Shipments from Districts: Home + {districtParkServed.Count - 1} others";
+                        UIDistrictsSummary.text = $"Shipments from Districts: Home + {inputDistrictParkServed.Count - 1} others";
+                        UIDistrictsSummary2.text = $"Shipments from Districts: Home + {inputDistrictParkServed.Count - 1} others";
                     }
 
                     UIDistrictsDropDown.triggerButton.tooltip = tooltipText;
+                    UIDistrictsDropDown2.triggerButton.tooltip = tooltipText;
                 }
                 else
                 {
-                    UIDistrictsSummary.text = $"Shipments from Districts: {districtParkServed.Count} others";
+                    UIDistrictsSummary.text = $"Shipments from Districts: {inputDistrictParkServed.Count} others";
+                    UIDistrictsSummary2.text = $"Shipments from Districts: {inputDistrictParkServed.Count} others";
                     UIDistrictsDropDown.triggerButton.tooltip = tooltipText;
+                    UIDistrictsDropDown2.triggerButton.tooltip = tooltipText;
                 }
             }
 
             if (m_inputMode == InputMode.OUTGOING || m_inputMode == InputMode.OUTGOING2)
             {
-                var homeDistrictPark = TransferManagerInfo.GetDistrictPark(m_currBuildingId);
-                var districtParkServed = Constraints.OutputDistrictParkServiced((InputType)m_inputMode, m_currBuildingId);
-
-                var buildingInputTypes = TransferManagerInfo.GetBuildingInputTypes(m_currBuildingId);
-                var tooltipText = buildingInputTypes.Contains(InputType.SUPPLY_CHAIN) ? TransferManagerInfo.GetSupplyBuildingDestinationsText((InputType)m_inputMode, m_currBuildingId) : TransferManagerInfo.GetOutputDistrictsServedText((InputType)m_inputMode, m_currBuildingId);
-
-                if (districtParkServed == null || districtParkServed.Count == 0)
+                
+                if (outputDistrictParkServed == null || outputDistrictParkServed.Count == 0)
                 {
                     UIDistrictsSummary.text = "Districts served: None";
+                    UIDistrictsSummary2.text = "Districts served: None";
                     UIDistrictsDropDown.triggerButton.tooltip = tooltipText;
+                    UIDistrictsDropDown2.triggerButton.tooltip = tooltipText;
                 }
-                // Note that using List::Contains is the wrong thing to do, since the districtParkServed array is 
-                // guaranteed to contain elements that refer to either 1 district or 1 park, but not both, while a building
-                // might belong to both the district or park ...
-                else if (!homeDistrictPark.IsEmpty && homeDistrictPark.IsServedBy(districtParkServed))
+                else if (!homeDistrictPark.IsEmpty && homeDistrictPark.IsServedBy(outputDistrictParkServed))
                 {
-                    if (districtParkServed.Count == 1)
+                    if (outputDistrictParkServed.Count == 1)
                     {
                         UIDistrictsSummary.text = $"Districts served: Home only";
+                        UIDistrictsSummary2.text = $"Districts served: Home only";
                     }
                     else
                     {
-                        UIDistrictsSummary.text = $"Districts served: Home + {districtParkServed.Count - 1} others";
+                        UIDistrictsSummary.text = $"Districts served: Home + {outputDistrictParkServed.Count - 1} others";
+                        UIDistrictsSummary2.text = $"Districts served: Home + {outputDistrictParkServed.Count - 1} others";
                     }
 
                     UIDistrictsDropDown.triggerButton.tooltip = tooltipText;
+                    UIDistrictsDropDown2.triggerButton.tooltip = tooltipText;
                 }
                 else
                 {
-                    UIDistrictsSummary.text = $"Districts served: {districtParkServed.Count} others";
+                    UIDistrictsSummary.text = $"Districts served: {outputDistrictParkServed.Count} others";
+                    UIDistrictsSummary2.text = $"Districts served: {outputDistrictParkServed.Count} others";
                     UIDistrictsDropDown.triggerButton.tooltip = tooltipText;
+                    UIDistrictsDropDown2.triggerButton.tooltip = tooltipText;
                 }
             }
         }
