@@ -24,17 +24,17 @@ namespace EnhancedDistrictServices
         /// <summary>
         /// Mapping of dropdown index to DistrictPark. 
         /// </summary>
-        private readonly List<DistrictPark> m_districtParkMapping = new List<DistrictPark>(capacity: DistrictPark.MAX_DISTRICT_PARK_COUNT);
+        private readonly List<DistrictPark> m_districtParkMapping = new(capacity: DistrictPark.MAX_DISTRICT_PARK_COUNT);
 
         /// <summary>
         /// Mapping of dropdown index to DistrictPark. 
         /// </summary>
-        private readonly List<DistrictPark> m_districtParkMapping2 = new List<DistrictPark>(capacity: DistrictPark.MAX_DISTRICT_PARK_COUNT);
+        private readonly List<DistrictPark> m_districtParkMapping2 = new(capacity: DistrictPark.MAX_DISTRICT_PARK_COUNT);
 
         /// <summary>
         /// Mapping of dropdown index to prefab index to vehicle info.
         /// </summary>
-        private readonly List<int> m_vehicleMapping = new List<int>();
+        private readonly List<int> m_vehicleMapping = new();
 
         /// <summary>
         /// Current input mode

@@ -465,7 +465,7 @@ namespace EnhancedDistrictServices
 
         private static UITextField AttachUITextFieldTo(UIComponent parent, int x, int y, int xOffset)
         {
-            x = x + xOffset;
+            x += xOffset;
             xOffset = m_componentWidth - (xOffset + 3);
 
             var textField = parent.AddUIComponent<UITextField>();
