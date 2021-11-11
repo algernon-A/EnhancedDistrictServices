@@ -48,7 +48,7 @@ namespace EnhancedDistrictServices
                     }
                 }
                 num1 = nextUnit;
-                if (++num2 > instance1.m_units.m_buffer.m_size)
+                if (++num2 > instance1.m_units.m_size)
                 {
                     CODebugBase<LogChannel>.Error(LogChannel.Core, "Invalid list detected!\n" + System.Environment.StackTrace);
                     break;
